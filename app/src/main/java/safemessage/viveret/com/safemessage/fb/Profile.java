@@ -5,6 +5,14 @@ package safemessage.viveret.com.safemessage.fb;
  */
 
 public class Profile implements IProfile {
+    private String myUserId, myFirstName, myLastName, myGender, myProfilePicUrl, myLocale;
+    private int myTimeZone;
+
+    public Profile() {
+        myUserId = myFirstName = myLastName = myGender = myProfilePicUrl = myLocale = "";
+        myTimeZone = 0;
+    }
+
     @Override
     public String getUserId() {
         return "user id";
