@@ -1,14 +1,18 @@
 package safemessage.viveret.com.safemessage.view;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
+
+import java.util.List;
 
 import safemessage.viveret.com.safemessage.R;
+import safemessage.viveret.com.safemessage.sms.SMSData;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,7 +34,10 @@ public class HomeFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
+    private List<SMSData> myMsgs;
+
     public HomeFragment() {
+        super();
         // Required empty public constructor
     }
 
@@ -38,16 +45,17 @@ public class HomeFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment HomeFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static HomeFragment newInstance(String param1, String param2) {
+    public static HomeFragment newInstance(List<SMSData> theMsgs) {
+        if (theMsgs == null)
+            throw new IllegalArgumentException("theMsms must not be null");
         HomeFragment fragment = new HomeFragment();
+        fragment.myMsgs = theMsgs;
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+//        args.putString(ARG_PARAM1, param1);
+//        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -65,7 +73,12 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        View v = inflater.inflate(R.layout.fragment_home, container, false);
+
+        ListView lv = (ListView) v.findViewById(R.id.mainList);
+        lv.setAdapter(new MessageAdapter(getActivity(), myMsgs));
+
+        return v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
