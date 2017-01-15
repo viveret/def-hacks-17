@@ -46,7 +46,7 @@ public class SMSFactory extends BroadcastReceiver {
     }
 
     private void getSentMessages(Context c) {
-        final String SMS_ALL = "content://sms/inbox";
+        final String SMS_ALL = "content://sms/sent";
         Uri uri = Uri.parse(SMS_ALL);
 
         Cursor cursor = c.getContentResolver().query(uri, null, null, null, null);
@@ -57,7 +57,7 @@ public class SMSFactory extends BroadcastReceiver {
             if (type != 3) {
                 String smsContent = cursor.getString(cursor.getColumnIndexOrThrow("body"));
                 Date date = new Date(Long.parseLong(cursor.getString(cursor.getColumnIndexOrThrow("date"))));
-                String threadId = cursor.getString(cursor.getColumnIndexOrThrow("thread_id"));
+                int threadId = cursor.getInt(cursor.getColumnIndexOrThrow("thread_id"));
                 SMSData sms = new SMSData("user", "user", smsContent, type, date, threadId);
                 myMessages.add(sms);
             }
@@ -80,7 +80,7 @@ public class SMSFactory extends BroadcastReceiver {
                 String person = cursor.getString(cursor.getColumnIndexOrThrow("person"));
                 String smsContent = cursor.getString(cursor.getColumnIndexOrThrow("body"));
 
-                String threadId = cursor.getString(cursor.getColumnIndexOrThrow("thread_id"));
+                int threadId = cursor.getInt(cursor.getColumnIndexOrThrow("thread_id"));
                 Date date = new Date(Long.parseLong(cursor.getString(cursor.getColumnIndexOrThrow("date"))));
                 Uri personUri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, phoneNumber);
                 ContentResolver cr = c.getContentResolver();
@@ -115,7 +115,13 @@ public class SMSFactory extends BroadcastReceiver {
     }
 
     public List<SMSData> getDataByThreadId(int threadId) {
-        return null;
+        List<SMSData> tmp = new ArrayList<SMSData>();
+        for (SMSData d : myData) {
+            if (d.getThreadId() == threadId) {
+                tmp.add(d);
+            }
+        }
+        return tmp;
     }
 
     @Override

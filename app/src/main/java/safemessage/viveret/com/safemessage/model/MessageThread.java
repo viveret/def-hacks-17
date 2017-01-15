@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import safemessage.viveret.com.safemessage.fb.IProfile;
+import safemessage.viveret.com.safemessage.fb.ProfileFactory;
 import safemessage.viveret.com.safemessage.sms.SMSData;
 import safemessage.viveret.com.safemessage.sms.SMSFactory;
 
@@ -12,17 +13,27 @@ import safemessage.viveret.com.safemessage.sms.SMSFactory;
  */
 
 public class MessageThread implements SMSFactory.SmsFactoryUpdatesListener {
+    private ProfileFactory allProfiles;
+
+
     private List<IProfile> myOthers;
     private List<SMSData> myMessages;
 
     private List<MessageThreadChangedListener> myListeners;
 
-    public MessageThread(SMSFactory src, IProfile other) {
+    private int myThreadId;
+
+    public MessageThread(SMSFactory src, ProfileFactory theProfiles, int theThreadId) {
         myOthers = new ArrayList<IProfile>();
         myMessages = new ArrayList<SMSData>();
         myListeners = new ArrayList<MessageThreadChangedListener>();
 
-        myOthers.add(other);
+        allProfiles = theProfiles;
+        myThreadId = theThreadId;
+    }
+
+    public int getThreadId() {
+        return myThreadId;
     }
 
     public List<IProfile> getOthers() {
@@ -63,12 +74,15 @@ public class MessageThread implements SMSFactory.SmsFactoryUpdatesListener {
     @Override
     public void onSmsUpdated(SMSFactory src) {
         myMessages.clear();
-        IProfile other = (myOthers.size() > 0 ? myOthers.get(0) : null);
+        myOthers.clear();
+
         // Extract profiles and messages into a thread
-        if (other != null) {
-            for (SMSData msg : src.getData()) {
-                if (other.sentMessage(msg)) {
-                    myMessages.add(msg);
+        for (SMSData msg : src.getData()) {
+            if (msg.getThreadId() == myThreadId) {
+                myMessages.add(msg);
+                IProfile tmp = msg.getProfile(allProfiles);
+                if (!myOthers.contains(tmp)) {
+                    myOthers.add(tmp);
                 }
             }
         }
