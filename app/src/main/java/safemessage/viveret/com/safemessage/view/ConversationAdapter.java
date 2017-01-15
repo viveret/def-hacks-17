@@ -2,6 +2,8 @@ package safemessage.viveret.com.safemessage.view;
 
 import android.content.Context;
 import android.net.Uri;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,17 +47,15 @@ public class ConversationAdapter extends ArrayAdapter<SMSData> implements Messag
 
         String avatarUri = mt.getProfileFromMsg(dta).getProfilePicURL();
         if (avatarUri != null && avatarUri.trim().length() > 0) {
-            //try {
             ivAvatar.setImageURI(null);
             ivAvatar.setImageURI(Uri.parse(avatarUri));
-            //                    BitmapFactory.decodeStream(ContactsContract.Contacts
-            //                            .openContactPhotoInputStream(getContext().getContentResolver(),
-            //                                    Uri.parse(avatarUri),
-            //                                    false))
-            // ));
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
+            RoundedBitmapDrawable bf =
+                    RoundedBitmapDrawableFactory.create(getContext().getResources(),
+                            ivAvatar.getDrawingCache()
+                    );
+            bf.setCircular(true);
+            ivAvatar.setImageURI(null);
+            ivAvatar.setImageBitmap(bf.getBitmap());
         }
         // Return the completed view to render on screen
         return convertView;
