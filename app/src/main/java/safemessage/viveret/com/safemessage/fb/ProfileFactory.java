@@ -55,20 +55,25 @@ public class ProfileFactory {
         return null;
     }
 
-    public IProfile getProfile(final String uid) {
+    public IProfile getProfile(final String uid, final String number) {
         IProfile ret = null;
 
-        if (myProfileCache.containsKey(uid))
+        if (uid != null && myProfileCache.containsKey(uid))
             ret = myProfileCache.get(uid);
+        else if (myProfileCache.containsKey(number))
+            ret = myProfileCache.get(number);
         else {
-            ret = getProfileFromContacts(uid);
+            ret = getProfileFromContacts(number);
 
             if (ret == null) {
-                Log.d(Config.LOGTAG, "Creating profile for " + uid);
+                Log.d(Config.LOGTAG, "Creating profile for " + number);
                 Profile tmp = new Profile();
-                tmp.setUserId(uid);
+                tmp.setNumber(number);
+                if (uid != null) {
+                    tmp.setUserId(uid);
+                }
                 ret = tmp;
-                myProfileCache.put(uid, tmp);
+                myProfileCache.put(number, tmp);
             }
 //            HttpURLConnection urlConnection = null;
 //            try {
@@ -133,7 +138,8 @@ public class ProfileFactory {
     }
 
     private IProfile getProfileFromContacts(String number) {
-        boolean foundContact = false;
+        Profile ret = null;
+
         Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number));
         String name = number;
         String contactId = name;
@@ -150,12 +156,17 @@ public class ProfileFactory {
         try {
             if (contactLookup != null && contactLookup.getCount() > 0) {
                 contactLookup.moveToNext();
-                name = contactLookup.getString(contactLookup.getColumnIndex(ContactsContract.Data.DISPLAY_NAME));
                 contactId = contactLookup.getString(contactLookup.getColumnIndex(BaseColumns._ID));
+                name = contactLookup.getString(contactLookup.getColumnIndex(ContactsContract.Data.DISPLAY_NAME));
                 number = contactLookup.getString(contactLookup.getColumnIndex(ContactsContract.PhoneLookup.NUMBER));
                 avatarURI = contactLookup.getString(contactLookup.getColumnIndex(ContactsContract.PhoneLookup.PHOTO_THUMBNAIL_URI));
 
-                foundContact = true;
+                ret = new Profile();
+                ret.setName(name);
+                ret.setUserId(contactId);
+                ret.setProfilePicUrl(avatarURI);
+                ret.setNumber(number);
+                myProfileCache.put(ret.getNumber(), ret);
             }
         } finally {
             if (contactLookup != null) {
@@ -163,16 +174,6 @@ public class ProfileFactory {
             }
         }
 
-        if (foundContact) {
-            Profile ret = new Profile();
-            ret.setName(name);
-            ret.setUserId(contactId);
-            ret.setProfilePicUrl(avatarURI);
-            ret.setNumber(number);
-
-            return ret;
-        } else {
-            return null;
-        }
+        return ret;
     }
 }

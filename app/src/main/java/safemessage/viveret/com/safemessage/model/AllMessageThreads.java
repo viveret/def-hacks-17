@@ -43,15 +43,15 @@ public class AllMessageThreads implements SMSFactory.SmsFactoryUpdatesListener {
     }
 
     private void recalculateConversations() {
-        List<String> distinctNames = new ArrayList<String>();
+        List<String> distinctNumbers = new ArrayList<String>();
         for (SMSData msg : myCache.getData()) {
-            if (msg.getName() != null && !distinctNames.contains(msg.getName())) {
-                distinctNames.add(msg.getName());
+            if (msg.getName() != null && !distinctNumbers.contains(msg.getName())) {
+                distinctNumbers.add(msg.getNumber());
             }
         }
 
-        for (String name : distinctNames) {
-            IProfile tmpProfile = profileCache.getProfile(name);
+        for (String number : distinctNumbers) {
+            IProfile tmpProfile = profileCache.getProfile(null, number);
             MessageThread tmp = getThread(tmpProfile);
             if (tmp == null) {
                 tmp = new MessageThread(myCache, tmpProfile);
