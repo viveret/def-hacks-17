@@ -34,7 +34,7 @@ public class DataProvider {
 
         List<String> about = new ArrayList<String>();
         about.add("Written by:" + "\n" +
-                "Viverete Steele, Justin Washburn, and Amy Irving." + "\n" +
+                "Viveret Steele, Justin Washburn, and Amy Irving." + "\n" +
                 "January 15th, 2017");
         listDetails.put("About", about);
 

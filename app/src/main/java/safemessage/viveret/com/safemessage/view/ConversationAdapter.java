@@ -47,13 +47,6 @@ public class ConversationAdapter extends ArrayAdapter<SMSData> implements Messag
         if (avatarUri != null && avatarUri.trim().length() > 0) {
             ivAvatar.setImageURI(null);
             ivAvatar.setImageURI(Uri.parse(avatarUri));
-//            RoundedBitmapDrawable bf =
-//                    RoundedBitmapDrawableFactory.create(getContext().getResources(),
-//                            ivAvatar.()
-//                    );
-//            bf.setCircular(true);
-//            ivAvatar.setImageURI(null);
-//            ivAvatar.setImageBitmap(bf.getBitmap());
         }
         // Return the completed view to render on screen
         return convertView;

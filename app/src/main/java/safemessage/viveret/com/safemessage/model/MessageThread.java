@@ -1,6 +1,7 @@
 package safemessage.viveret.com.safemessage.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import safemessage.viveret.com.safemessage.fb.IProfile;
@@ -87,7 +88,11 @@ public class MessageThread implements SMSFactory.SmsFactoryUpdatesListener {
             }
         }
 
+        Collections.sort(myMessages);
+
         notifyListeners();
+
+        //Log.v(Config.LOGTAG, "Messages in thread: " + Arrays.toString(myMessages.toArray()));
     }
 
     private void notifyListeners() {

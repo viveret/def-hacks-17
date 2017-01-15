@@ -43,7 +43,7 @@ public class SMSFactory extends BroadcastReceiver {
         Log.v(Config.LOGTAG, "Refreshing cache");
         myData.clear();
         myMessages.clear();
-        getSentMessages(c);
+        //getSentMessages(c);
         getInboxMessages(c);
     }
 
@@ -73,11 +73,10 @@ public class SMSFactory extends BroadcastReceiver {
         Cursor cursor = c.getContentResolver().query(uri, null, null, null, null);
 
         String[] projection = new String[]{"_id", "thread_id", "address", "person", "body", "date", "type"};
-        List<String> phoneNumbers = new ArrayList<String>();
         while (cursor.moveToNext()) {
             String phoneNumber = cursor.getString(cursor.getColumnIndexOrThrow("address"));
             int type = cursor.getInt(cursor.getColumnIndexOrThrow("type"));
-            if ((!phoneNumbers.contains(phoneNumber)) && (type != 3) && (phoneNumber.length() >= 1)) {
+            if (type != 3) {
                 String name = null;
                 String person = cursor.getString(cursor.getColumnIndexOrThrow("person"));
                 String smsContent = cursor.getString(cursor.getColumnIndexOrThrow("body"));
@@ -94,7 +93,6 @@ public class SMSFactory extends BroadcastReceiver {
                     name = localCursor.getString(localCursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
                 }
                 localCursor.close();
-                phoneNumbers.add(phoneNumber);
 
                 //Justin's code censors the message
                 // TextModerate censoredText = new TextModerate("shit wwww.reddit.com www.pornhub.com bad word", c);
@@ -107,7 +105,6 @@ public class SMSFactory extends BroadcastReceiver {
                 smsContent = censoredText.getCensoredText();
                 SMSData sms = new SMSData(name, phoneNumber, smsContent, type, date, threadId);
                 myData.add(sms);
-
             }
         }
     }
