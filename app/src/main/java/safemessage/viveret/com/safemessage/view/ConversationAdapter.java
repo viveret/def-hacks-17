@@ -11,16 +11,16 @@ import android.widget.TextView;
 import safemessage.viveret.com.safemessage.R;
 import safemessage.viveret.com.safemessage.model.MessageThread;
 import safemessage.viveret.com.safemessage.sms.SMSData;
-import safemessage.viveret.com.safemessage.sms.SMSFactory;
 
 /**
  * Created by viveret on 1/14/17.
  */
 
-public class MessageAdapter extends ArrayAdapter<SMSData> implements SMSFactory.SmsFactoryUpdatesListener {
+public class ConversationAdapter extends ArrayAdapter<SMSData> implements MessageThread.MessageThreadChangedListener {
 
-    public MessageAdapter(Context c, MessageThread mt) {
+    public ConversationAdapter(Context c, MessageThread mt) {
         super(c, R.layout.profile_item, mt.getMessages());
+        mt.registerListener(this);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class MessageAdapter extends ArrayAdapter<SMSData> implements SMSFactory.
     }
 
     @Override
-    public void onSmsUpdated(SMSFactory newSet) {
+    public void onMessageThreadChanged(MessageThread mt) {
         notifyDataSetChanged();
     }
 }

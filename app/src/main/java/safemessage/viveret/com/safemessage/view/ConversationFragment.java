@@ -32,7 +32,7 @@ public class ConversationFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     private MessageThread myMT;
-    private MessageAdapter myAdapter;
+    private ConversationAdapter myAdapter;
 
     public ConversationFragment() {
         super();
@@ -74,7 +74,7 @@ public class ConversationFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
 
         ListView lv = (ListView) v.findViewById(R.id.mainList);
-        myAdapter = new MessageAdapter(getActivity(), myMT);
+        myAdapter = new ConversationAdapter(getActivity(), myMT);
         lv.setAdapter(myAdapter);
 //        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //            @Override

@@ -117,6 +117,7 @@ public class SMSFactory extends BroadcastReceiver {
 
     public void registerListener(SmsFactoryUpdatesListener li) {
         myListeners.add(li);
+        li.onSmsUpdated(this);
     }
 
     public void removeListener(SmsFactoryUpdatesListener li) {

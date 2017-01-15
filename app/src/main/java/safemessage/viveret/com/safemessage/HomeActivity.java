@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import safemessage.viveret.com.safemessage.fb.ProfileFactory;
+import safemessage.viveret.com.safemessage.model.AllMessageThreads;
 import safemessage.viveret.com.safemessage.model.MessageThread;
 import safemessage.viveret.com.safemessage.sms.SMSFactory;
 import safemessage.viveret.com.safemessage.view.ConversationFragment;
@@ -46,6 +47,7 @@ public class HomeActivity extends Activity
     private List<String> subList;
     private ExpandableListView expList;
     private ExpListAdapter adapter;
+    private AllMessageThreads allThreads;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +56,9 @@ public class HomeActivity extends Activity
 
         allSms = new SMSFactory(this, this);
         allProfiles = new ProfileFactory(this);
+        allThreads = new AllMessageThreads(allSms, allProfiles);
         registerReceiver(allSms, new IntentFilter(SMSFactory.SMS_RECEIVED));
+
         //Initialize expList
         expList = (ExpandableListView) findViewById(R.id.expandable_list);
 
@@ -101,7 +105,7 @@ public class HomeActivity extends Activity
         getActionBar().setHomeButtonEnabled(true);
 
 
-        myFrag = homeFrag = HomeFragment.newInstance(allSms, allProfiles);
+        myFrag = homeFrag = HomeFragment.newInstance(allThreads);
 
         FragmentManager fm = getFragmentManager();
         FragmentTransaction trans = fm.beginTransaction();

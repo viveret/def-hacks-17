@@ -94,4 +94,13 @@ public class Profile implements IProfile {
         else
             return id.equals(msg.getNumber());
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof IProfile) {
+            IProfile tmp = (IProfile) o;
+            return getUserId().equals(tmp.getUserId());
+        } else
+            return false;
+    }
 }

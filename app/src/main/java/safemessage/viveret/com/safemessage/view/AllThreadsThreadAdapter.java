@@ -11,19 +11,19 @@ import android.widget.TextView;
 import safemessage.viveret.com.safemessage.R;
 import safemessage.viveret.com.safemessage.model.AllMessageThreads;
 import safemessage.viveret.com.safemessage.model.MessageThread;
-import safemessage.viveret.com.safemessage.sms.SMSFactory;
 
 /**
  * Created by viveret on 1/14/17.
  */
 
-public class MessageThreadAdapter extends ArrayAdapter<MessageThread> implements SMSFactory.SmsFactoryUpdatesListener {
+public class AllThreadsThreadAdapter extends ArrayAdapter<MessageThread> implements AllMessageThreads.AllThreadsChangeListener {
 
     private AllMessageThreads myThreads;
 
-    public MessageThreadAdapter(Context c, AllMessageThreads data) {
+    public AllThreadsThreadAdapter(Context c, AllMessageThreads data) {
         super(c, R.layout.profile_item, data.getThreads());
         myThreads = data;
+        myThreads.registerListener(this);
     }
 
     @Override
@@ -47,7 +47,8 @@ public class MessageThreadAdapter extends ArrayAdapter<MessageThread> implements
     }
 
     @Override
-    public void onSmsUpdated(SMSFactory newSet) {
+    public void onAllThreadsChanged(AllMessageThreads cache) {
+        myThreads = cache;
         notifyDataSetChanged();
     }
 }
