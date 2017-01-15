@@ -2,6 +2,7 @@ package safemessage.viveret.com.safemessage;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,8 +49,17 @@ public class ExpListAdapter extends BaseExpandableListAdapter {
             LayoutInflater inflator = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertview = inflator.inflate(R.layout.child_layout, parentview, false);
         }
-        TextView child_textview = (TextView) convertview.findViewById(R.id.child_txt);
+        final TextView child_textview = (TextView) convertview.findViewById(R.id.child_txt);
 
+        child_textview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String currenttext = child_textview.getText().toString();
+                if (currenttext.equals("Customize")) {
+                    Log.v(Config.LOGTAG, currenttext);
+                }
+            }
+        });
         //Give this child a specific Tag
 //        String id = "@+id/child_button" + Integer.toString(nextId);
 //        child_textview.setTag(id);
