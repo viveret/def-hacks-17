@@ -17,7 +17,12 @@ public class SMSData {
 
     public SMSData(String theName, String theNumber, String theMessage, int theType, Date theDate) {
         myName = theName;
-        myNumber = theNumber;
+
+        myNumber = theNumber.replaceAll("[^\\d.]", "");
+        if (myNumber.length() == 10)
+            myNumber = "1" + myNumber;
+
+
         myMessage = theMessage;
         myType = theType;
         myDate = theDate;

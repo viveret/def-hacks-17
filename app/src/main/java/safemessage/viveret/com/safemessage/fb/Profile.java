@@ -34,7 +34,9 @@ public class Profile implements IProfile {
     }
 
     public void setNumber(String v) {
-        myNumber = v;
+        myNumber = v.replaceAll("[^\\d.]", "");
+        if (myNumber.length() == 10)
+            myNumber = "1" + myNumber;
     }
 
     @Override
