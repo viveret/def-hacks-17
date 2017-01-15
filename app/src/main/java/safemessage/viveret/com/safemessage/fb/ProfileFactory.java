@@ -150,7 +150,7 @@ public class ProfileFactory {
                 BaseColumns._ID,
                 ContactsContract.PhoneLookup.DISPLAY_NAME,
                 ContactsContract.PhoneLookup.NUMBER,
-                ContactsContract.CommonDataKinds.Phone.PHOTO_THUMBNAIL_URI
+                ContactsContract.CommonDataKinds.Phone.PHOTO_URI
         }, null, null, null);
 
         try {
@@ -159,7 +159,7 @@ public class ProfileFactory {
                 contactId = contactLookup.getString(contactLookup.getColumnIndex(BaseColumns._ID));
                 name = contactLookup.getString(contactLookup.getColumnIndex(ContactsContract.Data.DISPLAY_NAME));
                 number = contactLookup.getString(contactLookup.getColumnIndex(ContactsContract.PhoneLookup.NUMBER));
-                avatarURI = contactLookup.getString(contactLookup.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_THUMBNAIL_URI));
+                avatarURI = contactLookup.getString(contactLookup.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_URI));
 
                 ret = new Profile();
                 ret.setName(name);
