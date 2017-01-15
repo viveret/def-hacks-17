@@ -10,6 +10,8 @@ public interface IProfile {
 
     String getUserId();
 
+    String getNumber();
+
     String getName();
 
     String getGender();

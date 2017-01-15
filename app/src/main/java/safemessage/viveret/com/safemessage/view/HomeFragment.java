@@ -2,16 +2,17 @@ package safemessage.viveret.com.safemessage.view;
 
 import android.app.Fragment;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import safemessage.viveret.com.safemessage.R;
 import safemessage.viveret.com.safemessage.fb.ProfileFactory;
 import safemessage.viveret.com.safemessage.model.AllMessageThreads;
+import safemessage.viveret.com.safemessage.model.MessageThread;
 import safemessage.viveret.com.safemessage.sms.SMSFactory;
 
 /**
@@ -82,15 +83,15 @@ public class HomeFragment extends Fragment {
         myAdapter = new MessageThreadAdapter(getActivity(), new AllMessageThreads(myMsgs, myProfiles));
         myMsgs.registerListener(myAdapter);
         lv.setAdapter(myAdapter);
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                MessageThread tmp = (MessageThread) parent.getItemAtPosition(position);
+                mListener.onSelectMessageThread(tmp);
+            }
+        });
 
         return v;
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
     }
 
     @Override
@@ -122,7 +123,6 @@ public class HomeFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onSelectMessageThread(MessageThread mt);
     }
 }

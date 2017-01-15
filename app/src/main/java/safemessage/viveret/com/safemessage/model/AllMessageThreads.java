@@ -17,15 +17,16 @@ public class AllMessageThreads {
     public AllMessageThreads(SMSFactory allMsgs, ProfileFactory profiles) {
         List<String> distinctNames = new ArrayList<String>();
         for (SMSData msg : allMsgs.getData()) {
-            if (!distinctNames.contains(msg.getName())) {
+            if (msg.getName() != null && !distinctNames.contains(msg.getName())) {
                 distinctNames.add(msg.getName());
             }
         }
 
         myThreads = new ArrayList<MessageThread>();
         for (String name : distinctNames) {
-            if (profiles.contains(name)) {
-                myThreads.add(new MessageThread(allMsgs, profiles.getProfile(name)));
+            MessageThread tmp = new MessageThread(allMsgs, profiles.getProfile(name));
+            if (tmp.getMessages().size() > 0) {
+                myThreads.add(tmp);
             }
         }
     }

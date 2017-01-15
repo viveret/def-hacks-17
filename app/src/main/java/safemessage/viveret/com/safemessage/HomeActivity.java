@@ -6,10 +6,10 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListView;
@@ -19,7 +19,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import safemessage.viveret.com.safemessage.fb.ProfileFactory;
+import safemessage.viveret.com.safemessage.model.MessageThread;
 import safemessage.viveret.com.safemessage.sms.SMSFactory;
+import safemessage.viveret.com.safemessage.view.ConversationFragment;
 import safemessage.viveret.com.safemessage.view.HomeFragment;
 
 /**
@@ -27,7 +29,8 @@ import safemessage.viveret.com.safemessage.view.HomeFragment;
  */
 
 public class HomeActivity extends Activity
-        implements HomeFragment.OnFragmentInteractionListener, SMSFactory.SmsFactoryUpdatesListener {
+        implements HomeFragment.OnFragmentInteractionListener, SMSFactory.SmsFactoryUpdatesListener,
+        ConversationFragment.OnFragmentInteractionListener {
 
     private static final int SMS_LOADER_ID = 1;
 
@@ -37,7 +40,7 @@ public class HomeActivity extends Activity
     private SMSFactory allSms;
     private ProfileFactory allProfiles;
 
-    private Fragment myFrag;
+    private Fragment myFrag, homeFrag, convFrag;
 
     private HashMap<String, List<String>> expandableList;
     private List<String> subList;
@@ -50,7 +53,7 @@ public class HomeActivity extends Activity
         setContentView(R.layout.activity_home);
 
         allSms = new SMSFactory(this, this);
-        allProfiles = new ProfileFactory();
+        allProfiles = new ProfileFactory(this);
         registerReceiver(allSms, new IntentFilter(SMSFactory.SMS_RECEIVED));
         //Initialize expList
         expList = (ExpandableListView) findViewById(R.id.expandable_list);
@@ -98,17 +101,12 @@ public class HomeActivity extends Activity
         getActionBar().setHomeButtonEnabled(true);
 
 
-        myFrag = HomeFragment.newInstance(allSms, allProfiles);
+        myFrag = homeFrag = HomeFragment.newInstance(allSms, allProfiles);
 
         FragmentManager fm = getFragmentManager();
         FragmentTransaction trans = fm.beginTransaction();
         trans.replace(R.id.content_frame, myFrag);
         trans.commit();
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
     }
 
 
@@ -140,5 +138,34 @@ public class HomeActivity extends Activity
     @Override
     public void onSmsUpdated(SMSFactory newSet) {
 
+    }
+
+    @Override
+    public void onSelectMessageThread(MessageThread mt) {
+        myFrag = convFrag = ConversationFragment.newInstance(mt);
+
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction trans = fm.beginTransaction();
+        trans.replace(R.id.content_frame, myFrag);
+        trans.commit();
+
+        Log.v(Config.LOGTAG, "Changed to message thread " + mt.getLastMessage().getName());
+    }
+
+    @Override
+    public void onReturn() {
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction trans = fm.beginTransaction();
+        trans.replace(R.id.content_frame, myFrag = homeFrag);
+        trans.commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (myFrag != homeFrag) {
+            onReturn();
+        } else {
+            super.onBackPressed();
+        }
     }
 }

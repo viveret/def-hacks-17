@@ -2,7 +2,6 @@ package safemessage.viveret.com.safemessage.view;
 
 import android.app.Fragment;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import safemessage.viveret.com.safemessage.R;
-import safemessage.viveret.com.safemessage.sms.SMSFactory;
+import safemessage.viveret.com.safemessage.model.MessageThread;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,9 +20,18 @@ import safemessage.viveret.com.safemessage.sms.SMSFactory;
  * create an instance of this fragment.
  */
 public class ConversationFragment extends Fragment {
+    // TODO: Rename parameter arguments, choose names that match
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
+
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
+
     private OnFragmentInteractionListener mListener;
 
-    private SMSFactory myMsgs;
+    private MessageThread myMT;
     private MessageAdapter myAdapter;
 
     public ConversationFragment() {
@@ -37,12 +45,15 @@ public class ConversationFragment extends Fragment {
      *
      * @return A new instance of fragment HomeFragment.
      */
-    public static ConversationFragment newInstance(SMSFactory theMsgs) {
-        if (theMsgs == null)
-            throw new IllegalArgumentException("theMsms must not be null");
+    // TODO: Rename and change types and number of parameters
+    public static ConversationFragment newInstance(MessageThread mt) {
+        if (mt == null)
+            throw new IllegalArgumentException("mt must not be null");
         ConversationFragment fragment = new ConversationFragment();
-        fragment.myMsgs = theMsgs;
+        fragment.myMT = mt;
         Bundle args = new Bundle();
+//        args.putString(ARG_PARAM1, param1);
+//        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -51,6 +62,8 @@ public class ConversationFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -58,21 +71,20 @@ public class ConversationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_conversation, container, false);
+        View v = inflater.inflate(R.layout.fragment_home, container, false);
 
         ListView lv = (ListView) v.findViewById(R.id.mainList);
-        myAdapter = new MessageAdapter(getActivity(), myMsgs);
-        myMsgs.registerListener(myAdapter);
+        myAdapter = new MessageAdapter(getActivity(), myMT);
         lv.setAdapter(myAdapter);
+//        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                MessageThread tmp = (MessageThread) parent.getItemAtPosition(position);
+//                mListener.onSelectMessageThread(tmp);
+//            }
+//        });
 
         return v;
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
     }
 
     @Override
@@ -90,7 +102,7 @@ public class ConversationFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-        myMsgs.removeListener(myAdapter);
+        // myMsgs.removeListener(myAdapter);
     }
 
     /**
@@ -104,7 +116,6 @@ public class ConversationFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onReturn();
     }
 }

@@ -41,6 +41,7 @@ public class MessageThreadAdapter extends ArrayAdapter<MessageThread> implements
         // Populate the data into the template view using the data object
         tvBody.setText(dta.getLastMessage().getBody());
         tvHeader.setText(dta.getLastMessage().getName());
+
         // Return the completed view to render on screen
         return convertView;
     }

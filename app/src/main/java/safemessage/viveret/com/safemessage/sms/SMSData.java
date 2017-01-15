@@ -22,7 +22,11 @@ public class SMSData {
 
 
     public String getName() {
-        return myName;
+        if (myName == null || myName.trim().length() == 0) {
+            return myNumber;
+        } else {
+            return myName;
+        }
     }
 
     public String getNumber() {

@@ -7,17 +7,21 @@ import safemessage.viveret.com.safemessage.sms.SMSData;
  */
 
 public class Profile implements IProfile {
-    private String myUserId, myName, myGender, myProfilePicUrl, myLocale;
+    private String myUserId, myName, myGender, myProfilePicUrl, myLocale, myNumber;
     private int myTimeZone;
 
     public Profile() {
-        myUserId = myName = myGender = myProfilePicUrl = myLocale = "";
+        myUserId = myName = myGender = myProfilePicUrl = myLocale = myNumber = "";
         myTimeZone = 0;
     }
 
     @Override
     public String getUserId() {
-        return myUserId;
+        if (myUserId == null || myUserId.trim().length() == 0) {
+            return getName();
+        } else {
+            return myUserId;
+        }
     }
 
     public void setUserId(String v) {
@@ -25,8 +29,21 @@ public class Profile implements IProfile {
     }
 
     @Override
+    public String getNumber() {
+        return myNumber;
+    }
+
+    public void setNumber(String v) {
+        myNumber = v;
+    }
+
+    @Override
     public String getName() {
-        return myName;
+        if (myName == null || myName.trim().length() == 0) {
+            return myNumber;
+        } else {
+            return myName;
+        }
     }
 
     public void setName(String v) {
@@ -71,6 +88,10 @@ public class Profile implements IProfile {
 
     @Override
     public boolean sentMessage(SMSData msg) {
-        return getName().equalsIgnoreCase(msg.getName());
+        String id = getUserId();
+        if (id == null)
+            return false;
+        else
+            return id.equals(msg.getNumber());
     }
 }

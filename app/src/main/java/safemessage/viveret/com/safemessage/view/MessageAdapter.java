@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import safemessage.viveret.com.safemessage.R;
+import safemessage.viveret.com.safemessage.model.MessageThread;
 import safemessage.viveret.com.safemessage.sms.SMSData;
 import safemessage.viveret.com.safemessage.sms.SMSFactory;
 
@@ -18,8 +19,8 @@ import safemessage.viveret.com.safemessage.sms.SMSFactory;
 
 public class MessageAdapter extends ArrayAdapter<SMSData> implements SMSFactory.SmsFactoryUpdatesListener {
 
-    public MessageAdapter(Context c, SMSFactory data) {
-        super(c, R.layout.profile_item, data.getData());
+    public MessageAdapter(Context c, MessageThread mt) {
+        super(c, R.layout.profile_item, mt.getMessages());
     }
 
     @Override
