@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">SafeMessage</string>
+    <string name="facebook_app_id">1854328048183342</string>
+    <string name="fb_login_protocol_scheme">fb1854328048183342</string>
 </resources>

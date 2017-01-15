@@ -5,6 +5,7 @@ package safemessage.viveret.com.safemessage.fb;
  */
 
 import android.util.JsonReader;
+import android.util.Log;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -16,6 +17,8 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.util.Map;
+
+import safemessage.viveret.com.safemessage.Config;
 
 public class ProfileFactory {
     private static final String fbEndPoint = "https://graph.facebook.com/v2.6/<USER_ID>?access_token=PAGE_ACCESS_TOKEN";
@@ -47,11 +50,11 @@ public class ProfileFactory {
                 InputStream in = new BufferedInputStream(urlConnection.getInputStream());
                 ret = JSON_ToProfile(in);
             } catch (MalformedURLException e) {
-                e.printStackTrace();
+                Log.e(Config.LOGTAG, e.toString());
             } catch (ProtocolException e) {
-                e.printStackTrace();
+                Log.e(Config.LOGTAG, e.toString());
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e(Config.LOGTAG, e.toString());
             } finally {
                 urlConnection.disconnect();
             }
@@ -64,7 +67,7 @@ public class ProfileFactory {
         try {
             reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            Log.e(Config.LOGTAG, e.toString());
             return null;
         }
 
@@ -73,14 +76,23 @@ public class ProfileFactory {
             reader.beginObject();
             while (reader.hasNext()) {
                 String name = reader.nextName();
-                if ("first_name".equals(name)) {
-                    // p.setName()
+                if ("name".equals(name)) {
+                    p.setName(reader.nextString());
+                } else if ("profile_pic".equals(name)) {
+                    p.setProfilePicUrl(reader.nextString());
+                } else if ("locale".equals(name)) {
+                    p.setLocale(reader.nextString());
+                } else if ("timezone".equals(name)) {
+                    p.setTimeZone(reader.nextInt());
+                } else if ("gender".equals(name)) {
+                    p.setGender(reader.nextString());
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(Config.LOGTAG, e.toString());
+            return null;
         }
 
-        return null;
+        return p;
     }
 }

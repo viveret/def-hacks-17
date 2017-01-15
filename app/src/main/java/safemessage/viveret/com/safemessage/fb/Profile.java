@@ -5,11 +5,11 @@ package safemessage.viveret.com.safemessage.fb;
  */
 
 public class Profile implements IProfile {
-    private String myUserId, myFirstName, myLastName, myGender, myProfilePicUrl, myLocale;
+    private String myUserId, myName, myGender, myProfilePicUrl, myLocale;
     private int myTimeZone;
 
     public Profile() {
-        myUserId = myFirstName = myLastName = myGender = myProfilePicUrl = myLocale = "";
+        myUserId = myName = myGender = myProfilePicUrl = myLocale = "";
         myTimeZone = 0;
     }
 
@@ -18,19 +18,17 @@ public class Profile implements IProfile {
         return "user id";
     }
 
+    public void setUserId(String v) {
+        myUserId = v;
+    }
+
     @Override
-    public String getFirstName() {
+    public String getName() {
         return "first name";
     }
 
-    @Override
-    public String getLastName() {
-        return "last name";
-    }
-
-    @Override
-    public String getWholeName() {
-        return getFirstName() + " " + getLastName();
+    public void setName(String v) {
+        myName = v;
     }
 
     @Override
@@ -38,9 +36,17 @@ public class Profile implements IProfile {
         return "gender";
     }
 
+    public void setGender(String v) {
+        myGender = v;
+    }
+
     @Override
     public String getProfilePicURL() {
         return "profile pic url";
+    }
+
+    public void setProfilePicUrl(String v) {
+        myProfilePicUrl = v;
     }
 
     @Override
@@ -48,8 +54,16 @@ public class Profile implements IProfile {
         return "locale";
     }
 
+    public void setLocale(String v) {
+        myLocale = v;
+    }
+
     @Override
     public int getTimeZone() {
         return 0;
+    }
+
+    public void setTimeZone(int v) {
+        myTimeZone = v;
     }
 }

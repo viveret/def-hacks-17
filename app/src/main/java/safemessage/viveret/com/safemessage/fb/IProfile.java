@@ -8,10 +8,7 @@ public interface IProfile {
 
     String getUserId();
 
-    String getFirstName();
-    String getLastName();
-
-    String getWholeName();
+    String getName();
 
     String getGender();
 
