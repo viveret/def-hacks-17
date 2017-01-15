@@ -1,6 +1,7 @@
 package safemessage.viveret.com.safemessage.view;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +45,12 @@ public class AllThreadsThreadAdapter extends ArrayAdapter<MessageThread> impleme
         // Populate the data into the template view using the data object
         tvBody.setText(dta.getLastMessage().getBody());
         tvHeader.setText(dta.getLastMessage().getProfile(allProfiles).getName());
+
+        String avatarUri = dta.getProfileFromMsg(dta.getLastMessage()).getProfilePicURL();
+        if (avatarUri != null && avatarUri.trim().length() > 0) {
+            ivAvatar.setImageURI(null);
+            ivAvatar.setImageURI(Uri.parse(avatarUri));
+        }
 
         // Return the completed view to render on screen
         return convertView;
