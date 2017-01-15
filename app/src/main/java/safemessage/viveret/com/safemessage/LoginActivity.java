@@ -1,10 +1,10 @@
 package safemessage.viveret.com.safemessage;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends Activity {
     // private CallbackManager callbackManager;
 
     @Override
