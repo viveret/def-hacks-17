@@ -17,7 +17,9 @@ public class SMSData {
         myMessage = theMessage;
         myType = theType;
         myDate = theDate;
+
     }
+
 
     public String getName() {
         return myName;
