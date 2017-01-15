@@ -17,21 +17,20 @@ import java.util.List;
 
 public class ExpListAdapter extends BaseExpandableListAdapter {
     private Context ctx;
-    private HashMap<String, List<String>> Movies_Category;
-    private List<String> Movies_List;
+    private HashMap<String, List<String>> listCategory;
+    private List<String> list;
+    private static int nextId = 1;
 
-    public ExpListAdapter(Context ctx, HashMap<String, List<String>> Movies_Category, List<String> Movies_List) {
+    public ExpListAdapter(Context ctx, HashMap<String, List<String>> theListCategory, List<String> theList) {
         this.ctx = ctx;
-        this.Movies_Category = Movies_Category;
-        this.Movies_List = Movies_List;
+        this.listCategory = theListCategory;
+        this.list = theList;
 
     }
 
     @Override
     public Object getChild(int parent, int child) {
-
-
-        return Movies_Category.get(Movies_List.get(parent)).get(child);
+        return listCategory.get(list.get(parent)).get(child);
     }
 
     @Override
@@ -44,33 +43,38 @@ public class ExpListAdapter extends BaseExpandableListAdapter {
     public View getChildView(int parent, int child, boolean lastChild, View convertview,
                              ViewGroup parentview) {
         String child_title = (String) getChild(parent, child);
+
         if (convertview == null) {
             LayoutInflater inflator = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertview = inflator.inflate(R.layout.child_layout, parentview, false);
         }
         TextView child_textview = (TextView) convertview.findViewById(R.id.child_txt);
+
+        //Give this child a specific Tag
+//        String id = "@+id/child_button" + Integer.toString(nextId);
+//        child_textview.setTag(id);
+//        id += 1;
+
         child_textview.setText(child_title);
-
-
         return convertview;
     }
 
     @Override
     public int getChildrenCount(int arg0) {
 
-        return Movies_Category.get(Movies_List.get(arg0)).size();
+        return listCategory.get(list.get(arg0)).size();
     }
 
     @Override
     public Object getGroup(int arg0) {
         // TODO Auto-generated method stub
-        return Movies_List.get(arg0);
+        return list.get(arg0);
     }
 
     @Override
     public int getGroupCount() {
         // TODO Auto-generated method stub
-        return Movies_List.size();
+        return list.size();
     }
 
     @Override
