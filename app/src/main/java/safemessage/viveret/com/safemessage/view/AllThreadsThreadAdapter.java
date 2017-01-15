@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import safemessage.viveret.com.safemessage.R;
+import safemessage.viveret.com.safemessage.fb.ProfileFactory;
 import safemessage.viveret.com.safemessage.model.AllMessageThreads;
 import safemessage.viveret.com.safemessage.model.MessageThread;
 
@@ -19,9 +20,11 @@ import safemessage.viveret.com.safemessage.model.MessageThread;
 public class AllThreadsThreadAdapter extends ArrayAdapter<MessageThread> implements AllMessageThreads.AllThreadsChangeListener {
 
     private AllMessageThreads myThreads;
+    private ProfileFactory allProfiles;
 
-    public AllThreadsThreadAdapter(Context c, AllMessageThreads data) {
+    public AllThreadsThreadAdapter(Context c, AllMessageThreads data, ProfileFactory theProfiles) {
         super(c, R.layout.profile_item, data.getThreads());
+        allProfiles = theProfiles;
         myThreads = data;
         myThreads.registerListener(this);
     }
@@ -40,7 +43,7 @@ public class AllThreadsThreadAdapter extends ArrayAdapter<MessageThread> impleme
         TextView tvBody = (TextView) convertView.findViewById(R.id.body);
         // Populate the data into the template view using the data object
         tvBody.setText(dta.getLastMessage().getBody());
-        tvHeader.setText(dta.getLastMessage().getName());
+        tvHeader.setText(dta.getLastMessage().getProfile(allProfiles).getName());
 
         // Return the completed view to render on screen
         return convertView;
