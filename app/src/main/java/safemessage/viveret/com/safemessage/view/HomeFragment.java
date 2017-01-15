@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import safemessage.viveret.com.safemessage.R;
+import safemessage.viveret.com.safemessage.fb.ProfileFactory;
 import safemessage.viveret.com.safemessage.model.AllMessageThreads;
 import safemessage.viveret.com.safemessage.model.MessageThread;
 
@@ -26,6 +27,7 @@ public class HomeFragment extends Fragment {
 
     private AllThreadsThreadAdapter myAdapter;
     private AllMessageThreads allThreads;
+    private ProfileFactory allProfiles;
 
     public HomeFragment() {
         super();
@@ -39,11 +41,13 @@ public class HomeFragment extends Fragment {
      * @return A new instance of fragment HomeFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static HomeFragment newInstance(AllMessageThreads allTheThreads) {
+    public static HomeFragment newInstance(AllMessageThreads allTheThreads, ProfileFactory theProfiles) {
         if (allTheThreads == null)
             throw new IllegalArgumentException("theMsms must not be null");
+
         HomeFragment fragment = new HomeFragment();
         fragment.allThreads = allTheThreads;
+        fragment.allProfiles = theProfiles;
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -63,7 +67,7 @@ public class HomeFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
 
         ListView lv = (ListView) v.findViewById(R.id.mainList);
-        myAdapter = new AllThreadsThreadAdapter(getActivity(), allThreads);
+        myAdapter = new AllThreadsThreadAdapter(getActivity(), allThreads, allProfiles);
         lv.setAdapter(myAdapter);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

@@ -105,7 +105,7 @@ public class HomeActivity extends Activity
         getActionBar().setHomeButtonEnabled(true);
 
 
-        myFrag = homeFrag = HomeFragment.newInstance(allThreads);
+        myFrag = homeFrag = HomeFragment.newInstance(allThreads, allProfiles);
 
         FragmentManager fm = getFragmentManager();
         FragmentTransaction trans = fm.beginTransaction();
