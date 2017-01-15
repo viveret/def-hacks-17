@@ -2,36 +2,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
         <SearchView
             android:id="@+id/text_view1"
-            android:layout_width="400dp"
-            android:layout_height="65dp"
-            android:layout_toRightOf="@+id/button1" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/button1"
+            android:queryHint="Search conversations..." />
 
-
-        <ScrollView
-            android:id="@+id/scroll_view1"
+        <ListView
+            android:id="@+id/mainList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/button1">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <ListView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-            </LinearLayout>
-        </ScrollView>
-
-
-    </RelativeLayout>
-
-
+            android:divider="@null" />
+    </LinearLayout>
 </FrameLayout>

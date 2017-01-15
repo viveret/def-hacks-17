@@ -12,6 +12,10 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.util.List;
+
+import safemessage.viveret.com.safemessage.sms.AllSMSLoader;
+import safemessage.viveret.com.safemessage.sms.SMSData;
 import safemessage.viveret.com.safemessage.view.HomeFragment;
 
 /**
@@ -20,14 +24,20 @@ import safemessage.viveret.com.safemessage.view.HomeFragment;
 
 public class HomeActivity extends Activity
         implements HomeFragment.OnFragmentInteractionListener {
+
+    private static final int SMS_LOADER_ID = 1;
+
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
 
+    private List<SMSData> allSms;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        allSms = AllSMSLoader.getSMS(this);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerToggle = new ActionBarDrawerToggle(
@@ -43,7 +53,8 @@ public class HomeActivity extends Activity
              */
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                getActionBar().setTitle("ttt");
+                if (allSms.size() > 0)
+                    allSms.get(0).getName();
             }
 
             /**
@@ -51,7 +62,6 @@ public class HomeActivity extends Activity
              */
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                getActionBar().setTitle("awd");
             }
         };
 
@@ -62,7 +72,7 @@ public class HomeActivity extends Activity
         getActionBar().setHomeButtonEnabled(true);
 
 
-        Fragment f = new HomeFragment();
+        Fragment f = HomeFragment.newInstance(allSms);
 
         FragmentManager fm = getFragmentManager();
         FragmentTransaction trans = fm.beginTransaction();
