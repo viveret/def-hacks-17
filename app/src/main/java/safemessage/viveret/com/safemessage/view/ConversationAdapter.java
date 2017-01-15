@@ -1,6 +1,10 @@
 package safemessage.viveret.com.safemessage.view;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +22,12 @@ import safemessage.viveret.com.safemessage.sms.SMSData;
 
 public class ConversationAdapter extends ArrayAdapter<SMSData> implements MessageThread.MessageThreadChangedListener {
 
+    private MessageThread mt;
+
     public ConversationAdapter(Context c, MessageThread mt) {
         super(c, R.layout.profile_item, mt.getMessages());
         mt.registerListener(this);
+        this.mt = mt;
     }
 
     @Override
@@ -38,6 +45,15 @@ public class ConversationAdapter extends ArrayAdapter<SMSData> implements Messag
         // Populate the data into the template view using the data object
         tvBody.setText(dta.getBody());
         tvHeader.setText(dta.getName());
+
+        String avatarUri = mt.getProfileFromMsg(dta).getProfilePicURL();
+        if (avatarUri != null && avatarUri.trim().length() > 0) {
+            ivAvatar.setImageDrawable(new BitmapDrawable(getContext().getResources(),
+                    BitmapFactory.decodeStream(ContactsContract.Contacts
+                            .openContactPhotoInputStream(getContext().getContentResolver(),
+                                    Uri.parse(avatarUri),
+                                    false))));
+        }
         // Return the completed view to render on screen
         return convertView;
     }

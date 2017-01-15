@@ -41,6 +41,16 @@ public class MessageThread implements SMSFactory.SmsFactoryUpdatesListener {
         }
     }
 
+    public IProfile getProfileFromMsg(SMSData msg) {
+        for (IProfile p : myOthers) {
+            if (p.sentMessage(msg)) {
+                return p;
+            }
+        }
+
+        return null;
+    }
+
     public void registerListener(MessageThreadChangedListener li) {
         myListeners.add(li);
         li.onMessageThreadChanged(this);
