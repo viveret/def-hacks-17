@@ -16,6 +16,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 
 import safemessage.viveret.com.safemessage.Config;
@@ -26,6 +27,10 @@ public class ProfileFactory {
     private Map<String, IProfile> myProfileCache;
 
     private String myUserId;
+
+    public ProfileFactory() {
+        myProfileCache = new HashMap<String, IProfile>();
+    }
 
 
     public IProfile getUsersProfile() {
@@ -94,5 +99,9 @@ public class ProfileFactory {
         }
 
         return p;
+    }
+
+    public boolean contains(String uid) {
+        return myProfileCache.containsKey(uid);
     }
 }

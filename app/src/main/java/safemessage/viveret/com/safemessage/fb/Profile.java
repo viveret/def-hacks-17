@@ -1,5 +1,7 @@
 package safemessage.viveret.com.safemessage.fb;
 
+import safemessage.viveret.com.safemessage.sms.SMSData;
+
 /**
  * Created by viveret on 1/14/17.
  */
@@ -15,7 +17,7 @@ public class Profile implements IProfile {
 
     @Override
     public String getUserId() {
-        return "user id";
+        return myUserId;
     }
 
     public void setUserId(String v) {
@@ -24,7 +26,7 @@ public class Profile implements IProfile {
 
     @Override
     public String getName() {
-        return "first name";
+        return myName;
     }
 
     public void setName(String v) {
@@ -33,7 +35,7 @@ public class Profile implements IProfile {
 
     @Override
     public String getGender() {
-        return "gender";
+        return myGender;
     }
 
     public void setGender(String v) {
@@ -42,7 +44,7 @@ public class Profile implements IProfile {
 
     @Override
     public String getProfilePicURL() {
-        return "profile pic url";
+        return myProfilePicUrl;
     }
 
     public void setProfilePicUrl(String v) {
@@ -51,7 +53,7 @@ public class Profile implements IProfile {
 
     @Override
     public String getLocale() {
-        return "locale";
+        return myLocale;
     }
 
     public void setLocale(String v) {
@@ -60,10 +62,15 @@ public class Profile implements IProfile {
 
     @Override
     public int getTimeZone() {
-        return 0;
+        return myTimeZone;
     }
 
     public void setTimeZone(int v) {
         myTimeZone = v;
+    }
+
+    @Override
+    public boolean sentMessage(SMSData msg) {
+        return getName().equalsIgnoreCase(msg.getName());
     }
 }

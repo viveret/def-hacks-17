@@ -27,13 +27,13 @@
         <activity android:name=".LoginActivity"></activity>
         <activity android:name=".HomeActivity"></activity>
 
-        <receiver
+        <!--receiver
             android:name=".sms.SMSFactory"
             android:enabled="true">
             <intent-filter android:priority="2147483647">
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
-        </receiver>
+        </receiver-->
 
         <activity android:name="com.facebook.FacebookActivity"
             android:configChanges=

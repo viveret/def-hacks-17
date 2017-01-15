@@ -22,7 +22,7 @@ import safemessage.viveret.com.safemessage.Config;
  */
 
 public class SMSFactory extends BroadcastReceiver {
-    private static final String SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
+    public static final String SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
 
     private List<SMSData> myData;
     private List<SmsFactoryUpdatesListener> myListeners;
@@ -96,7 +96,7 @@ public class SMSFactory extends BroadcastReceiver {
                         messages[0].getDisplayOriginatingAddress(), message,
                         -1, new Date(messages[0].getTimestampMillis())));
                 // prevent any other broadcast receivers from receiving broadcast
-                // abortBroadcast();
+                abortBroadcast();
                 notifyObservers();
             }
         }
@@ -104,7 +104,7 @@ public class SMSFactory extends BroadcastReceiver {
 
     private void notifyObservers() {
         for (SmsFactoryUpdatesListener li : myListeners) {
-            li.onSmsUpdated(myData);
+            li.onSmsUpdated(this);
         }
     }
 
@@ -117,6 +117,6 @@ public class SMSFactory extends BroadcastReceiver {
     }
 
     public interface SmsFactoryUpdatesListener {
-        void onSmsUpdated(List<SMSData> newSet);
+        void onSmsUpdated(SMSFactory newSet);
     }
 }

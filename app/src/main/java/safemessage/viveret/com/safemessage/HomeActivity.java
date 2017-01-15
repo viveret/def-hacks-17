@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,9 +13,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
 import android.view.View;
 
-import java.util.List;
-
-import safemessage.viveret.com.safemessage.sms.SMSData;
+import safemessage.viveret.com.safemessage.fb.ProfileFactory;
 import safemessage.viveret.com.safemessage.sms.SMSFactory;
 import safemessage.viveret.com.safemessage.view.HomeFragment;
 
@@ -31,6 +30,7 @@ public class HomeActivity extends Activity
     private ActionBarDrawerToggle mDrawerToggle;
 
     private SMSFactory allSms;
+    private ProfileFactory allProfiles;
 
     private Fragment myFrag;
 
@@ -40,6 +40,8 @@ public class HomeActivity extends Activity
         setContentView(R.layout.activity_home);
 
         allSms = new SMSFactory(this, this);
+        allProfiles = new ProfileFactory();
+        registerReceiver(allSms, new IntentFilter(SMSFactory.SMS_RECEIVED));
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerToggle = new ActionBarDrawerToggle(
@@ -72,7 +74,7 @@ public class HomeActivity extends Activity
         getActionBar().setHomeButtonEnabled(true);
 
 
-        myFrag = HomeFragment.newInstance(allSms);
+        myFrag = HomeFragment.newInstance(allSms, allProfiles);
 
         FragmentManager fm = getFragmentManager();
         FragmentTransaction trans = fm.beginTransaction();
@@ -112,7 +114,7 @@ public class HomeActivity extends Activity
     }
 
     @Override
-    public void onSmsUpdated(List<SMSData> newSet) {
+    public void onSmsUpdated(SMSFactory newSet) {
 
     }
 }
