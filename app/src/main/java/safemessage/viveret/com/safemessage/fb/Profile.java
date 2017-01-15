@@ -18,7 +18,7 @@ public class Profile implements IProfile {
     @Override
     public String getUserId() {
         if (myUserId == null || myUserId.trim().length() == 0) {
-            return getName();
+            return getNumber();
         } else {
             return myUserId;
         }
@@ -90,7 +90,7 @@ public class Profile implements IProfile {
 
     @Override
     public boolean sentMessage(SMSData msg) {
-        String id = getUserId();
+        String id = getNumber();
         if (id == null)
             return false;
         else
@@ -101,7 +101,7 @@ public class Profile implements IProfile {
     public boolean equals(Object o) {
         if (o instanceof IProfile) {
             IProfile tmp = (IProfile) o;
-            return getUserId().equals(tmp.getUserId());
+            return getNumber().equals(tmp.getNumber());
         } else
             return false;
     }
