@@ -132,6 +132,9 @@ public class ConversationFragment extends Fragment {
     }
 
     private void sendMessage(String msg) {
+        if (msg.trim().length() == 0)
+            return;
+
         Log.i(Config.LOGTAG, "Sending message \"" + msg + "\"");
 
         String SENT = "SMS_SENT";
@@ -180,7 +183,6 @@ public class ConversationFragment extends Fragment {
                     case Activity.RESULT_OK:
                         Toast.makeText(getActivity(), "SMS delivered",
                                 Toast.LENGTH_SHORT).show();
-                        msgForm.setText("");
                         break;
                     case Activity.RESULT_CANCELED:
                         Toast.makeText(getActivity(), "SMS not delivered",
@@ -192,6 +194,7 @@ public class ConversationFragment extends Fragment {
 
         SmsManager mgr = SmsManager.getDefault();
         mgr.sendTextMessage(myMT.getOthers().get(0).getNumber(), null, msg, sentPI, deliveredPI);
+        msgForm.setText("");
     }
 
 
