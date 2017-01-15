@@ -3,6 +3,7 @@ package safemessage.viveret.com.safemessage.view;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,6 +75,15 @@ public class HomeFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 MessageThread tmp = (MessageThread) parent.getItemAtPosition(position);
                 mListener.onSelectMessageThread(tmp);
+            }
+        });
+
+        final SwipeRefreshLayout refreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.refreshLayout);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                allThreads.getCache().refreshCache(getActivity());
+                refreshLayout.setRefreshing(false);
             }
         });
 
