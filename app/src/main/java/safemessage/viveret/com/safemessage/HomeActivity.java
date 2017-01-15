@@ -14,8 +14,8 @@ import android.view.View;
 
 import java.util.List;
 
-import safemessage.viveret.com.safemessage.sms.AllSMSLoader;
 import safemessage.viveret.com.safemessage.sms.SMSData;
+import safemessage.viveret.com.safemessage.sms.SMSFactory;
 import safemessage.viveret.com.safemessage.view.HomeFragment;
 
 /**
@@ -23,21 +23,23 @@ import safemessage.viveret.com.safemessage.view.HomeFragment;
  */
 
 public class HomeActivity extends Activity
-        implements HomeFragment.OnFragmentInteractionListener {
+        implements HomeFragment.OnFragmentInteractionListener, SMSFactory.SmsFactoryUpdatesListener {
 
     private static final int SMS_LOADER_ID = 1;
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
 
-    private List<SMSData> allSms;
+    private SMSFactory allSms;
+
+    private Fragment myFrag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        allSms = AllSMSLoader.getSMS(this);
+        allSms = new SMSFactory(this, this);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerToggle = new ActionBarDrawerToggle(
@@ -53,8 +55,6 @@ public class HomeActivity extends Activity
              */
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                if (allSms.size() > 0)
-                    allSms.get(0).getName();
             }
 
             /**
@@ -72,11 +72,11 @@ public class HomeActivity extends Activity
         getActionBar().setHomeButtonEnabled(true);
 
 
-        Fragment f = HomeFragment.newInstance(allSms);
+        myFrag = HomeFragment.newInstance(allSms);
 
         FragmentManager fm = getFragmentManager();
         FragmentTransaction trans = fm.beginTransaction();
-        trans.replace(R.id.content_frame, f);
+        trans.replace(R.id.content_frame, myFrag);
         trans.commit();
     }
 
@@ -109,5 +109,10 @@ public class HomeActivity extends Activity
         // Handle your other action bar items...
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSmsUpdated(List<SMSData> newSet) {
+
     }
 }

@@ -9,10 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import java.util.List;
-
 import safemessage.viveret.com.safemessage.R;
-import safemessage.viveret.com.safemessage.sms.SMSData;
+import safemessage.viveret.com.safemessage.sms.SMSFactory;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,7 +32,8 @@ public class HomeFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    private List<SMSData> myMsgs;
+    private SMSFactory myMsgs;
+    private MessageAdapter myAdapter;
 
     public HomeFragment() {
         super();
@@ -48,7 +47,7 @@ public class HomeFragment extends Fragment {
      * @return A new instance of fragment HomeFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static HomeFragment newInstance(List<SMSData> theMsgs) {
+    public static HomeFragment newInstance(SMSFactory theMsgs) {
         if (theMsgs == null)
             throw new IllegalArgumentException("theMsms must not be null");
         HomeFragment fragment = new HomeFragment();
@@ -76,7 +75,9 @@ public class HomeFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
 
         ListView lv = (ListView) v.findViewById(R.id.mainList);
-        lv.setAdapter(new MessageAdapter(getActivity(), myMsgs));
+        myAdapter = new MessageAdapter(getActivity(), myMsgs);
+        myMsgs.registerListener(myAdapter);
+        lv.setAdapter(myAdapter);
 
         return v;
     }
@@ -103,6 +104,7 @@ public class HomeFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        myMsgs.removeListener(myAdapter);
     }
 
     /**
