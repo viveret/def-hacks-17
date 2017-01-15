@@ -45,7 +45,7 @@ public class AllMessageThreads implements SMSFactory.SmsFactoryUpdatesListener {
     private void recalculateConversations() {
         List<String> distinctNumbers = new ArrayList<String>();
         for (SMSData msg : myCache.getData()) {
-            if (msg.getName() != null && !distinctNumbers.contains(msg.getName())) {
+            if (msg.getNumber() != null && !distinctNumbers.contains(msg.getNumber())) {
                 distinctNumbers.add(msg.getNumber());
             }
         }
