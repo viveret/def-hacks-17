@@ -12,15 +12,16 @@ import java.util.List;
 
 import safemessage.viveret.com.safemessage.R;
 import safemessage.viveret.com.safemessage.sms.SMSData;
+import safemessage.viveret.com.safemessage.sms.SMSFactory;
 
 /**
  * Created by viveret on 1/14/17.
  */
 
-public class MessageAdapter extends ArrayAdapter<SMSData> {
+public class MessageAdapter extends ArrayAdapter<SMSData> implements SMSFactory.SmsFactoryUpdatesListener {
 
-    public MessageAdapter(Context c, List<SMSData> data) {
-        super(c, R.layout.profile_item, data);
+    public MessageAdapter(Context c, SMSFactory data) {
+        super(c, R.layout.profile_item, data.getData());
     }
 
     @Override
@@ -40,5 +41,10 @@ public class MessageAdapter extends ArrayAdapter<SMSData> {
         tvHeader.setText(dta.getName());
         // Return the completed view to render on screen
         return convertView;
+    }
+
+    @Override
+    public void onSmsUpdated(List<SMSData> newSet) {
+        notifyDataSetChanged();
     }
 }
