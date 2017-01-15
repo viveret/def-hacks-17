@@ -7,11 +7,13 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import safemessage.viveret.com.safemessage.Config;
 import safemessage.viveret.com.safemessage.fb.TextModerate;
 
 /**
@@ -93,12 +95,17 @@ public class SMSFactory extends BroadcastReceiver {
                 phoneNumbers.add(phoneNumber);
 
                 //Justin's code censors the message
-                TextModerate censoredText = new TextModerate("shit wwww.reddit.com www.pornhub.com bad word", c);
-                //TextModerate censoredText = new TextModerate(smsContent,c);
-                //smsContent = censoredText.getCensoredText();
+                // TextModerate censoredText = new TextModerate("shit wwww.reddit.com www.pornhub.com bad word", c);
+                TextModerate censoredText = new TextModerate(smsContent, c);
 
+
+                Log.v(Config.LOGTAG, "THIS IS IT" + smsContent);
+
+
+                smsContent = censoredText.getCensoredText();
                 SMSData sms = new SMSData(name, phoneNumber, smsContent, type, date, threadId);
                 myData.add(sms);
+
             }
         }
     }

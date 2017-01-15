@@ -6,8 +6,10 @@ import android.util.Log;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
+
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
 
 import safemessage.viveret.com.safemessage.Config;
 
@@ -25,6 +27,7 @@ public class TextModerate implements ITextModerate {
     private String myCensoredText;
     private int myInstancesOfProfanity;
     private Context myContext;
+    private CountDownLatch myLatch;
 
     public TextModerate(String theString, Context theContext){
         myOriginalText = theString;
@@ -34,34 +37,54 @@ public class TextModerate implements ITextModerate {
         moderateText();
     }
 
-    public void reachURL(Context theContext, String theText, FutureCallback<JsonObject> call ) {
-        Ion.with(theContext)
-                .load(cmEndPoint)
-
-                .addHeader("Content-Type", "text/plain")
-                .addHeader("Ocp-Apim-Subscription-Key", SUBSCRIPTION_KEY)
+    public void reachURL(Context theContext, String theText) {
 
 
-                .setStringBody(theText)
-                .asJsonObject()
-                .setCallback(call);
+        try {
+            JsonObject tmp = Ion.with(theContext)
+                    .load(cmEndPoint)
+
+                    .addHeader("Content-Type", "text/plain")
+                    .addHeader("Ocp-Apim-Subscription-Key", SUBSCRIPTION_KEY)
+
+
+                    .setStringBody(theText)
+                    .asJsonObject().get();
+            Log.v(Config.LOGTAG, "Microsoft Cognitive Services contacted");
+            Log.v(Config.LOGTAG, tmp.toString());
+            moderateProfanity(tmp);
+            moderateURL(tmp);
+
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        // .setCallback(call);
+
 
     }
 
     private void moderateText() {
+       /* myLatch = new CountDownLatch(1);
 
         FutureCallback  callback = new FutureCallback<JsonObject>() {
             @Override
             public void onCompleted(Exception e, JsonObject result) {
 
-               Log.v(Config.LOGTAG, "Microsoft Cognitive Services contacted");
+                Log.v(Config.LOGTAG, "Microsoft Cognitive Services contacted");
                 Log.v(Config.LOGTAG, result.toString());
                 moderateProfanity(result);
                 moderateURL(result);
+              // responses.put(response);
+                myLatch.countDown();
             }
         };
+        */
 
-        reachURL(myContext, myOriginalText, callback);
+
+        reachURL(myContext, myOriginalText);
     }
 
     private void moderateURL(JsonObject result) {
