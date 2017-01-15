@@ -39,7 +39,8 @@ public class SMSFactory extends BroadcastReceiver {
         refreshCache(c);
     }
 
-    private void refreshCache(Context c) {
+    public void refreshCache(Context c) {
+        Log.v(Config.LOGTAG, "Refreshing cache");
         myData.clear();
         myMessages.clear();
         getSentMessages(c);

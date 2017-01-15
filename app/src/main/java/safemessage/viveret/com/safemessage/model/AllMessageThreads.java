@@ -44,6 +44,10 @@ public class AllMessageThreads implements SMSFactory.SmsFactoryUpdatesListener {
         notifyListeners();
     }
 
+    public SMSFactory getCache() {
+        return myCache;
+    }
+
     private void recalculateConversations() {
         List<Integer> difThreads = new ArrayList<Integer>();
         for (SMSData msg : myCache.getData()) {
