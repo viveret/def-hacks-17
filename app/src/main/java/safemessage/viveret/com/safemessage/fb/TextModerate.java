@@ -68,22 +68,24 @@ public class TextModerate implements ITextModerate {
         JsonElement urls;
         JsonArray urlArray = new JsonArray();
         if (result.get("Urls")!= null){
-            urls = result.get("Terms");
+            urls = result.get("Urls");
             if (!urls.isJsonNull()) {
                 urlArray = urls.getAsJsonArray();
+                Log.v(Config.LOGTAG, urlArray.size()+ "");
             }
         }
 
         for (int i = 0; i < urlArray.size(); i++) {
             JsonObject jsonObject = urlArray.get(i).getAsJsonObject();
-            jsonObject = jsonObject.getAsJsonObject("Categories");
-           // urlArray = jsonObject.getAsJsonArray();//being used for categories
-           // jsonObject = urlArray.
-            if (adultProbability < jsonObject.get("Adult").getAsDouble() ||
-                    malwareProbability <  jsonObject.get("Malware").getAsDouble() ||
-                    phishingProbability < jsonObject.get("Phishing").getAsDouble()) {
-                Log.v(Config.LOGTAG, jsonObject.get("URL").getAsString());
-                myCensoredText.replaceFirst(jsonObject.get("URL").getAsString(), "LINK REMOVED");
+            JsonObject jsonCategory = jsonObject.getAsJsonObject("Categories");
+            //Log.v(Config.LOGTAG, jsonCategory.get("Adult").getAsDouble() + "");
+            if (adultProbability < jsonCategory.get("Adult").getAsDouble() ||
+                    malwareProbability <  jsonCategory.get("Malware").getAsDouble() ||
+                    phishingProbability < jsonCategory.get("Phishing").getAsDouble()) {
+                String url = jsonObject.get("URL").toString();
+                url = url.replaceAll("\"", "");
+                myCensoredText = myCensoredText.replaceFirst(url, "LINK REMOVED");
+                Log.v(Config.LOGTAG, myCensoredText);
             }
         }
 

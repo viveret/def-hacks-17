@@ -66,7 +66,7 @@ public class SMSFactory extends BroadcastReceiver {
                 phoneNumbers.add(phoneNumber);
 
                 //Justin's code censors the message
-                 TextModerate censoredText = new TextModerate("shit wwww.reddit.com www.pornhub.com bad word",c);
+                 TextModerate censoredText = new TextModerate("shit wwww.piratesbay.com www.pornhub.com bad word",c);
                 //TextModerate censoredText = new TextModerate(smsContent,c);
                 //smsContent = censoredText.getCensoredText();
 
