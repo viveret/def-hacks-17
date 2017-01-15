@@ -6,9 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.telephony.SmsMessage;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,12 +24,45 @@ public class SMSFactory extends BroadcastReceiver {
     private List<SMSData> myData;
     private List<SmsFactoryUpdatesListener> myListeners;
 
+    private List<SMSData> myMessages;
+
     public SMSFactory(Context c, SmsFactoryUpdatesListener mainListener) {
         myListeners = new ArrayList<SmsFactoryUpdatesListener>();
         registerListener(mainListener);
 
         myData = new ArrayList<SMSData>();
+        myMessages = new ArrayList<SMSData>();
 
+        refreshCache(c);
+    }
+
+    private void refreshCache(Context c) {
+        myData.clear();
+        myMessages.clear();
+        getSentMessages(c);
+        getInboxMessages(c);
+    }
+
+    private void getSentMessages(Context c) {
+        final String SMS_ALL = "content://sms/inbox";
+        Uri uri = Uri.parse(SMS_ALL);
+
+        Cursor cursor = c.getContentResolver().query(uri, null, null, null, null);
+
+        String[] projection = new String[]{"_id", "thread_id", "body", "date", "type"};
+        while (cursor.moveToNext()) {
+            int type = cursor.getInt(cursor.getColumnIndexOrThrow("type"));
+            if (type != 3) {
+                String smsContent = cursor.getString(cursor.getColumnIndexOrThrow("body"));
+                Date date = new Date(Long.parseLong(cursor.getString(cursor.getColumnIndexOrThrow("date"))));
+                String threadId = cursor.getString(cursor.getColumnIndexOrThrow("thread_id"));
+                SMSData sms = new SMSData("user", "user", smsContent, type, date, threadId);
+                myMessages.add(sms);
+            }
+        }
+    }
+
+    private void getInboxMessages(Context c) {
         final String SMS_ALL = "content://sms/inbox";
         Uri uri = Uri.parse(SMS_ALL);
 
@@ -47,6 +78,7 @@ public class SMSFactory extends BroadcastReceiver {
                 String person = cursor.getString(cursor.getColumnIndexOrThrow("person"));
                 String smsContent = cursor.getString(cursor.getColumnIndexOrThrow("body"));
 
+                String threadId = cursor.getString(cursor.getColumnIndexOrThrow("thread_id"));
                 Date date = new Date(Long.parseLong(cursor.getString(cursor.getColumnIndexOrThrow("date"))));
                 Uri personUri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, phoneNumber);
                 ContentResolver cr = c.getContentResolver();
@@ -61,11 +93,11 @@ public class SMSFactory extends BroadcastReceiver {
                 phoneNumbers.add(phoneNumber);
 
                 //Justin's code censors the message
-                 TextModerate censoredText = new TextModerate("shit wwww.piratesbay.com www.pornhub.com bad word",c);
+                TextModerate censoredText = new TextModerate("shit wwww.reddit.com www.pornhub.com bad word", c);
                 //TextModerate censoredText = new TextModerate(smsContent,c);
                 //smsContent = censoredText.getCensoredText();
 
-                SMSData sms = new SMSData(name, phoneNumber, smsContent, type, date);
+                SMSData sms = new SMSData(name, phoneNumber, smsContent, type, date, threadId);
                 myData.add(sms);
             }
         }
@@ -78,34 +110,35 @@ public class SMSFactory extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals(SMS_RECEIVED)) {
-            Bundle bundle = intent.getExtras();
-            if (bundle != null) {
-                // get sms objects
-                Object[] pdus = (Object[]) bundle.get("pdus");
-                if (pdus.length == 0) {
-                    return;
-                }
-                // large message might be broken into many
-                SmsMessage[] messages = new SmsMessage[pdus.length];
-                StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < pdus.length; i++) {
-                    messages[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
-                    sb.append(messages[i].getMessageBody());
-                }
-                String sender = messages[0].getOriginatingAddress();
-                String message = sb.toString();
-
-                myData.add(new SMSData(sender,
-                        messages[0].getDisplayOriginatingAddress(), message,
-                        -1, new Date(messages[0].getTimestampMillis())));
+            refreshCache(context);
+//            Bundle bundle = intent.getExtras();
+//            if (bundle != null) {
+//                // get sms objects
+//                Object[] pdus = (Object[]) bundle.get("pdus");
+//                if (pdus.length == 0) {
+//                    return;
+//                }
+//                // large message might be broken into many
+//                SmsMessage[] messages = new SmsMessage[pdus.length];
+//                StringBuilder sb = new StringBuilder();
+//                for (int i = 0; i < pdus.length; i++) {
+//                    messages[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
+//                    sb.append(messages[i].getMessageBody());
+//                }
+//                String sender = messages[0].getOriginatingAddress();
+//                String message = sb.toString();
+//
+//                myData.add(new SMSData(sender,
+//                        messages[0].getDisplayOriginatingAddress(), message,
+//                        -1, new Date(messages[0].getTimestampMillis()), ""));
                 // prevent any other broadcast receivers from receiving broadcast
                 abortBroadcast();
-                notifyObservers();
-            }
+            notifyListeners();
+            //}
         }
     }
 
-    private void notifyObservers() {
+    private void notifyListeners() {
         for (SmsFactoryUpdatesListener li : myListeners) {
             li.onSmsUpdated(this);
         }
