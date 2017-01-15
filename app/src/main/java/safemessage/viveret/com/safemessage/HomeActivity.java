@@ -14,11 +14,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListView;
 
-import safemessage.viveret.com.safemessage.fb.ProfileFactory;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import safemessage.viveret.com.safemessage.fb.ProfileFactory;
 import safemessage.viveret.com.safemessage.sms.SMSFactory;
 import safemessage.viveret.com.safemessage.view.HomeFragment;
 
@@ -54,13 +54,18 @@ public class HomeActivity extends Activity
         registerReceiver(allSms, new IntentFilter(SMSFactory.SMS_RECEIVED));
         //Initialize expList
         expList = (ExpandableListView) findViewById(R.id.expandable_list);
+
+        //This is where we populate the blocked people list.
+        List<String> blockedPeople = new ArrayList<String>();
+        blockedPeople.add("Jessica");
+        blockedPeople.add("Joker");
+        //set who is blocked.
+        DataProvider.setBlockedPeople(blockedPeople);
+        //Make adapter to add the list.
         expandableList = DataProvider.getInfo();
         subList = new ArrayList<String>(expandableList.keySet());
         adapter = new ExpListAdapter(this, expandableList, subList);
         expList.setAdapter(adapter);
-
-
-        allSms = AllSMSLoader.getSMS(this);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerToggle = new ActionBarDrawerToggle(

@@ -12,14 +12,24 @@ This class populates the navigation drawer.
  */
 public class DataProvider {
 
+    private static List<String> blockedPeople = new ArrayList<String>();
+
+    public static void setBlockedPeople(List<String> theBlockedPeople) {
+        //Deep copy
+        for (String people : theBlockedPeople) {
+            blockedPeople.add(people);
+        }
+    }
+
     public static HashMap<String, List<String>> getInfo() {
         HashMap<String, List<String>> listDetails = new HashMap<String, List<String>>();
-        //Each list being dispayed in navigation Drawer.
-        List<String> BlockedList = new ArrayList<String>();
-        BlockedList.add("Jane");
-        BlockedList.add("Jake");
+        listDetails.put("Blocked List", blockedPeople);
 
-        listDetails.put("Blocked List", BlockedList);
+        List<String> about = new ArrayList<String>();
+        about.add("Written by:" + "\n" +
+                "Viverete Steele, Justin Washburn, and Amy Irving." + "\n" +
+                "January 15th, 2017");
+        listDetails.put("About", about);
 
         return listDetails;
     }
