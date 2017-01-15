@@ -49,6 +49,7 @@ public class SMSFactory extends BroadcastReceiver {
                 String name = null;
                 String person = cursor.getString(cursor.getColumnIndexOrThrow("person"));
                 String smsContent = cursor.getString(cursor.getColumnIndexOrThrow("body"));
+
                 Date date = new Date(Long.parseLong(cursor.getString(cursor.getColumnIndexOrThrow("date"))));
                 Uri personUri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, phoneNumber);
                 ContentResolver cr = c.getContentResolver();
@@ -62,6 +63,12 @@ public class SMSFactory extends BroadcastReceiver {
                 Log.v(Config.LOGTAG, "person:" + person + "  name:" + name + "  phoneNumber:" + phoneNumber);
                 localCursor.close();
                 phoneNumbers.add(phoneNumber);
+
+                //Justin's code censors the message
+                    // Test instance TextModerate censoredText = new TextModerate("shit bad word",c);
+                //TextModerate censoredText = new TextModerate(smsContent,c);
+                //smsContent = censoredText.getCensoredText();
+
                 SMSData sms = new SMSData(name, phoneNumber, smsContent, type, date);
                 myData.add(sms);
             }
