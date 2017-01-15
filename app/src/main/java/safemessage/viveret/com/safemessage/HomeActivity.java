@@ -6,8 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.view.View;
-import android.widget.ListView;
+import android.widget.Button;
 
 import safemessage.viveret.com.safemessage.view.HomeFragment;
 
@@ -32,15 +31,11 @@ public class HomeActivity extends FragmentActivity
     }
 
     /*
-    This method expands and hides the "block list" drawer located in fragment_home.
+    Moves user to the number fragment.
      */
-    public void showDrawer() {
-        ListView myListView = (ListView) findViewById(R.id.left_drawer);
-        if (myListView.isShown()) {
-            myListView.setVisibility(View.INVISIBLE);
-            return;
-        }
-        myListView.setVisibility(View.VISIBLE);
+    public void newMessage() {
+        Button myButton = (Button) findViewById(R.id.button2);
+        myButton.setText("CLICKED");
     }
 
     @Override

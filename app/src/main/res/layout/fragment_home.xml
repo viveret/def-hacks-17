@@ -34,7 +34,7 @@
         <ScrollView
             android:id="@+id/scroll_view1"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="375dp"
             android:layout_below="@+id/button1">
 
             <LinearLayout
@@ -48,6 +48,14 @@
             </LinearLayout>
         </ScrollView>
 
+        <Button
+            android:id="@+id/button2"
+            android:text="New Message"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:onClick="newMessage"
+            android:layout_below="@+id/scroll_view1"
+            android:layout_alignParentRight="true" />
 
     </RelativeLayout>
 
