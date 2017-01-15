@@ -172,4 +172,10 @@ public class HomeActivity extends Activity
             super.onBackPressed();
         }
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(allSms);
+    }
 }

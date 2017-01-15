@@ -26,12 +26,23 @@ public class SMSFactory extends BroadcastReceiver {
     private List<SMSData> myData;
     private List<SmsFactoryUpdatesListener> myListeners;
 
+    private List<SMSData> myMessages;
+
     public SMSFactory(Context c, SmsFactoryUpdatesListener mainListener) {
         myListeners = new ArrayList<SmsFactoryUpdatesListener>();
         registerListener(mainListener);
 
         myData = new ArrayList<SMSData>();
 
+        getSentMessages(c);
+        getInboxMessages(c);
+    }
+
+    private void getSentMessages(Context c) {
+
+    }
+
+    private void getInboxMessages(Context c) {
         final String SMS_ALL = "content://sms/inbox";
         Uri uri = Uri.parse(SMS_ALL);
 
@@ -61,7 +72,7 @@ public class SMSFactory extends BroadcastReceiver {
                 phoneNumbers.add(phoneNumber);
 
                 //Justin's code censors the message
-                 TextModerate censoredText = new TextModerate("shit wwww.reddit.com www.pornhub.com bad word",c);
+                TextModerate censoredText = new TextModerate("shit wwww.reddit.com www.pornhub.com bad word", c);
                 //TextModerate censoredText = new TextModerate(smsContent,c);
                 //smsContent = censoredText.getCensoredText();
 
