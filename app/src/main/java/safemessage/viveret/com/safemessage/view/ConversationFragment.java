@@ -1,12 +1,7 @@
 package safemessage.viveret.com.safemessage.view;
 
-import android.app.Activity;
 import android.app.Fragment;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.util.Log;
@@ -19,7 +14,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import safemessage.viveret.com.safemessage.Config;
 import safemessage.viveret.com.safemessage.R;
@@ -137,63 +131,63 @@ public class ConversationFragment extends Fragment {
 
         Log.i(Config.LOGTAG, "Sending message \"" + msg + "\"");
 
-        String SENT = "SMS_SENT";
-        String DELIVERED = "SMS_DELIVERED";
+//        String SENT = "SMS_SENT";
+//        String DELIVERED = "SMS_DELIVERED";
 
-        PendingIntent sentPI = PendingIntent.getBroadcast(getActivity(), 0,
-                new Intent(SENT), 0);
-
-        PendingIntent deliveredPI = PendingIntent.getBroadcast(getActivity(), 0,
-                new Intent(DELIVERED), 0);
+//        PendingIntent sentPI = PendingIntent.getBroadcast(getActivity(), 0,
+//                new Intent(SENT), 0);
+//
+//        PendingIntent deliveredPI = PendingIntent.getBroadcast(getActivity(), 0,
+//                new Intent(DELIVERED), 0);
 
         //---when the SMS has been sent---
-        getActivity().registerReceiver(new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context arg0, Intent arg1) {
-                switch (getResultCode()) {
-                    case Activity.RESULT_OK:
-                        Toast.makeText(getActivity(), "SMS sent",
-                                Toast.LENGTH_SHORT).show();
-                        break;
-                    case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
-                        Toast.makeText(getActivity(), "Generic failure",
-                                Toast.LENGTH_SHORT).show();
-                        break;
-                    case SmsManager.RESULT_ERROR_NO_SERVICE:
-                        Toast.makeText(getActivity(), "No service",
-                                Toast.LENGTH_SHORT).show();
-                        break;
-                    case SmsManager.RESULT_ERROR_NULL_PDU:
-                        Toast.makeText(getActivity(), "Null PDU",
-                                Toast.LENGTH_SHORT).show();
-                        break;
-                    case SmsManager.RESULT_ERROR_RADIO_OFF:
-                        Toast.makeText(getActivity(), "Radio off",
-                                Toast.LENGTH_SHORT).show();
-                        break;
-                }
-            }
-        }, new IntentFilter(SENT));
-
-        //---when the SMS has been delivered---
-        getActivity().registerReceiver(new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context arg0, Intent arg1) {
-                switch (getResultCode()) {
-                    case Activity.RESULT_OK:
-                        Toast.makeText(getActivity(), "SMS delivered",
-                                Toast.LENGTH_SHORT).show();
-                        break;
-                    case Activity.RESULT_CANCELED:
-                        Toast.makeText(getActivity(), "SMS not delivered",
-                                Toast.LENGTH_SHORT).show();
-                        break;
-                }
-            }
-        }, new IntentFilter(DELIVERED));
+//        getActivity().registerReceiver(new BroadcastReceiver() {
+//            @Override
+//            public void onReceive(Context arg0, Intent arg1) {
+//                switch (getResultCode()) {
+//                    case Activity.RESULT_OK:
+//                        Toast.makeText(getActivity(), "SMS sent",
+//                                Toast.LENGTH_SHORT).show();
+//                        break;
+//                    case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
+//                        Toast.makeText(getActivity(), "Generic failure",
+//                                Toast.LENGTH_SHORT).show();
+//                        break;
+//                    case SmsManager.RESULT_ERROR_NO_SERVICE:
+//                        Toast.makeText(getActivity(), "No service",
+//                                Toast.LENGTH_SHORT).show();
+//                        break;
+//                    case SmsManager.RESULT_ERROR_NULL_PDU:
+//                        Toast.makeText(getActivity(), "Null PDU",
+//                                Toast.LENGTH_SHORT).show();
+//                        break;
+//                    case SmsManager.RESULT_ERROR_RADIO_OFF:
+//                        Toast.makeText(getActivity(), "Radio off",
+//                                Toast.LENGTH_SHORT).show();
+//                        break;
+//                }
+//            }
+//        }, new IntentFilter(SENT));
+//
+//        //---when the SMS has been delivered---
+//        getActivity().registerReceiver(new BroadcastReceiver() {
+//            @Override
+//            public void onReceive(Context arg0, Intent arg1) {
+//                switch (getResultCode()) {
+//                    case Activity.RESULT_OK:
+//                        Toast.makeText(getActivity(), "SMS delivered",
+//                                Toast.LENGTH_SHORT).show();
+//                        break;
+//                    case Activity.RESULT_CANCELED:
+//                        Toast.makeText(getActivity(), "SMS not delivered",
+//                                Toast.LENGTH_SHORT).show();
+//                        break;
+//                }
+//            }
+//        }, new IntentFilter(DELIVERED));
 
         SmsManager mgr = SmsManager.getDefault();
-        mgr.sendTextMessage(myMT.getOthers().get(0).getNumber(), null, msg, sentPI, deliveredPI);
+        mgr.sendTextMessage(myMT.getOthers().get(0).getNumber(), null, msg, null, null);
         msgForm.setText("");
     }
 
