@@ -167,6 +167,7 @@ public class ProfileFactory {
                 ret.setProfilePicUrl(avatarURI);
                 ret.setNumber(number);
                 myProfileCache.put(ret.getNumber(), ret);
+                Log.v(Config.LOGTAG, "Retrieved contact " + ret.toString());
             }
         } finally {
             if (contactLookup != null) {

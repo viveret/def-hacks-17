@@ -1,6 +1,10 @@
 package safemessage.viveret.com.safemessage.sms;
 
+import android.util.Log;
+
 import java.util.Date;
+
+import safemessage.viveret.com.safemessage.Config;
 
 /**
  * Created by viveret on 1/14/17.
@@ -18,6 +22,7 @@ public class SMSData {
         myType = theType;
         myDate = theDate;
 
+        Log.v(Config.LOGTAG, "Created new SMSData " + toString());
     }
 
 
@@ -35,5 +40,10 @@ public class SMSData {
 
     public String getBody() {
         return myMessage;
+    }
+
+    @Override
+    public String toString() {
+        return "[name=\"" + myName + "\", number=" + myNumber + ", body=\"" + myMessage + "\"]";
     }
 }
