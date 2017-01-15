@@ -23,7 +23,14 @@ public class DataProvider {
 
     public static HashMap<String, List<String>> getInfo() {
         HashMap<String, List<String>> listDetails = new HashMap<String, List<String>>();
+
         listDetails.put("Blocked List", blockedPeople);
+
+        List<String> buttons = new ArrayList<String>();
+        buttons.add("Customize");
+        //buttons.add("Moderate");
+        //buttons.add("Strict");
+        listDetails.put("Safe Message", buttons);
 
         List<String> about = new ArrayList<String>();
         about.add("Written by:" + "\n" +

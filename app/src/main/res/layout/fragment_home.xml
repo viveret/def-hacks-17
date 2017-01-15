@@ -11,12 +11,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/button1"
+            android:background="#90caf9"
             android:queryHint="Search conversations..." />
 
         <ListView
             android:id="@+id/mainList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="#e3f2fd"
             android:divider="@null" />
     </LinearLayout>
 </FrameLayout>
