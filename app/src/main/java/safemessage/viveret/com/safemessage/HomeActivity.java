@@ -12,8 +12,13 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ExpandableListView;
 
 import safemessage.viveret.com.safemessage.fb.ProfileFactory;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import safemessage.viveret.com.safemessage.sms.SMSFactory;
 import safemessage.viveret.com.safemessage.view.HomeFragment;
 
@@ -34,6 +39,11 @@ public class HomeActivity extends Activity
 
     private Fragment myFrag;
 
+    private HashMap<String, List<String>> expandableList;
+    private List<String> subList;
+    private ExpandableListView expList;
+    private ExpListAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,12 +52,21 @@ public class HomeActivity extends Activity
         allSms = new SMSFactory(this, this);
         allProfiles = new ProfileFactory();
         registerReceiver(allSms, new IntentFilter(SMSFactory.SMS_RECEIVED));
+        //Initialize expList
+        expList = (ExpandableListView) findViewById(R.id.expandable_list);
+        expandableList = DataProvider.getInfo();
+        subList = new ArrayList<String>(expandableList.keySet());
+        adapter = new ExpListAdapter(this, expandableList, subList);
+        expList.setAdapter(adapter);
+
+
+        allSms = AllSMSLoader.getSMS(this);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerToggle = new ActionBarDrawerToggle(
                 this,                  /* host Activity */
                 mDrawerLayout,         /* DrawerLayout object */
-                R.drawable.ic_drawer,  /* nav drawer icon to replace 'Up' caret */
+                R.mipmap.ic_launcher,  /* nav drawer icon to replace 'Up' caret */
                 R.string.drawer_open,  /* "open drawer" description */
                 R.string.drawer_close  /* "close drawer" description */
         ) {
