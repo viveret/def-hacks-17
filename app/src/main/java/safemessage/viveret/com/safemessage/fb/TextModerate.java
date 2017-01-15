@@ -19,7 +19,7 @@ import safemessage.viveret.com.safemessage.Config;
 
 public class TextModerate implements ITextModerate {
 
-
+    private double sentimentValue = .1;
     private double adultProbability = .5;
     private double malwareProbability = .5;
     private double phishingProbability = .5;
@@ -67,13 +67,13 @@ public class TextModerate implements ITextModerate {
             JsonObject tmp = Ion.with(theContext)
                     .load(cmtxtanalyticsEndPoint)
 
-                    .addHeader("Content-Type", "text/plain")
+                    .addHeader("Content-Type", "text/json")
                     .addHeader("Ocp-Apim-Subscription-Key", SUBSCRIPTION_KEY_TEXT_ANALYTICS)
 
 
-                    .setStringBody("{\"documents\": [ {\"language\": \"en\",\"id\": \"string\", \"text\": \"" + theText + "\"}]  }")
+                    .setStringBody("{\"documents\": [ {\"language\": \"en\",\"id\": \"string\", \"text\": \"" + theText + "\"}]}")
                     .asJsonObject().get();
-            Log.v(Config.LOGTAG, "Microsoft Cognitive Services contacted");
+            Log.v(Config.LOGTAG, "Microsoft text analytic Services contacted");
             Log.v(Config.LOGTAG, tmp.toString());
             moderateSentiment(tmp);
 
@@ -91,17 +91,19 @@ public class TextModerate implements ITextModerate {
     private void moderateSentiment(JsonObject result) {
         JsonElement doccuments;
         JsonArray docArray = new JsonArray();
-        if (result.get("Urls") != null) {
-            doccuments = result.get("Urls");
+        if (result.get("documents") != null) {
+            doccuments = result.get("documents");
             if (!doccuments.isJsonNull()) {
                 docArray = doccuments.getAsJsonArray();
             }
         }
         for (int i = 0; i < docArray.size(); i++) {
             JsonObject jsonObject = docArray.get(i).getAsJsonObject();
-            
+            if (sentimentValue > jsonObject.get("score").getAsDouble()) {
+                Log.v(Config.LOGTAG, jsonObject.get("score") + "");
+                myCensoredText = "MESSAGE BLOCKED";
+            }
         }
-
     }
 
     private void moderateText() {
