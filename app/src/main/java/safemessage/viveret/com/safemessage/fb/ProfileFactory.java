@@ -73,7 +73,7 @@ public class ProfileFactory {
                     tmp.setUserId(uid);
                 }
                 ret = tmp;
-                myProfileCache.put(number, tmp);
+                myProfileCache.put(tmp.getNumber(), tmp);
             }
 //            HttpURLConnection urlConnection = null;
 //            try {
