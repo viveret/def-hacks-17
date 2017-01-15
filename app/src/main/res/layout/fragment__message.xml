@@ -1,0 +1,59 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="layout.Fragment_Message">
+
+    <!-- TODO: Update blank fragment layout -->
+    <RelativeLayout
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent">
+
+        <ImageView
+            android:id="@+id/button1"
+            android:layout_width="65dp"
+            android:layout_height="65dp" />
+
+        <TextView
+            android:id="@+id/text_view1"
+            android:layout_width="400dp"
+            android:layout_height="65dp"
+            android:text="name"
+            android:layout_toRightOf="@+id/button1" />
+
+        <ScrollView
+            android:id="@+id/scroll_view1"
+            android:layout_width="match_parent"
+            android:layout_below="@+id/button1"
+            android:layout_height="375dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <ListView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+        </ScrollView>
+
+        <EditText
+            android:id="@+id/text_view2"
+            android:layout_width="400dp"
+            android:layout_height="65dp"
+            android:text="Write a message..."
+            android:layout_below="@+id/scroll_view1"
+            android:layout_toLeftOf="@+id/button2" />
+
+        <Button
+            android:id="@+id/button2"
+            android:text="Send"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_below="@+id/scroll_view1"
+            android:layout_alignParentRight="true" />
+
+    </RelativeLayout>
+
+</FrameLayout>
