@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Handler;
 import android.provider.ContactsContract;
 import android.util.Log;
 
@@ -125,33 +126,18 @@ public class SMSFactory extends BroadcastReceiver {
     }
 
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(final Context context, Intent intent) {
         if (intent.getAction().equals(SMS_RECEIVED)) {
-            refreshCache(context);
-//            Bundle bundle = intent.getExtras();
-//            if (bundle != null) {
-//                // get sms objects
-//                Object[] pdus = (Object[]) bundle.get("pdus");
-//                if (pdus.length == 0) {
-//                    return;
-//                }
-//                // large message might be broken into many
-//                SmsMessage[] messages = new SmsMessage[pdus.length];
-//                StringBuilder sb = new StringBuilder();
-//                for (int i = 0; i < pdus.length; i++) {
-//                    messages[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
-//                    sb.append(messages[i].getMessageBody());
-//                }
-//                String sender = messages[0].getOriginatingAddress();
-//                String message = sb.toString();
-//
-//                myData.add(new SMSData(sender,
-//                        messages[0].getDisplayOriginatingAddress(), message,
-//                        -1, new Date(messages[0].getTimestampMillis()), ""));
-                // prevent any other broadcast receivers from receiving broadcast
-                abortBroadcast();
-            notifyListeners();
-            //}
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    refreshCache(context);
+                    notifyListeners();
+                }
+            }, 2000);
+            // prevent any other broadcast receivers from receiving broadcast
+            abortBroadcast();
         }
     }
 
