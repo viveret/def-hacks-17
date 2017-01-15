@@ -56,34 +56,55 @@ public class TextModerate implements ITextModerate {
             moderateURL(tmp);
 
 
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        // .setCallback(call);
+
+        try {
+            JsonObject tmp = Ion.with(theContext)
+                    .load(cmtxtanalyticsEndPoint)
+
+                    .addHeader("Content-Type", "text/plain")
+                    .addHeader("Ocp-Apim-Subscription-Key", SUBSCRIPTION_KEY_TEXT_ANALYTICS)
+
+
+                    .setStringBody("{\"documents\": [ {\"language\": \"en\",\"id\": \"string\", \"text\": \"" + theText + "\"}]  }")
+                    .asJsonObject().get();
+            Log.v(Config.LOGTAG, "Microsoft Cognitive Services contacted");
+            Log.v(Config.LOGTAG, tmp.toString());
+            moderateSentiment(tmp);
+
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
 
 
     }
 
-    private void moderateText() {
-       /* myLatch = new CountDownLatch(1);
-
-        FutureCallback  callback = new FutureCallback<JsonObject>() {
-            @Override
-            public void onCompleted(Exception e, JsonObject result) {
-
-                Log.v(Config.LOGTAG, "Microsoft Cognitive Services contacted");
-                Log.v(Config.LOGTAG, result.toString());
-                moderateProfanity(result);
-                moderateURL(result);
-              // responses.put(response);
-                myLatch.countDown();
+    private void moderateSentiment(JsonObject result) {
+        JsonElement doccuments;
+        JsonArray docArray = new JsonArray();
+        if (result.get("Urls") != null) {
+            doccuments = result.get("Urls");
+            if (!doccuments.isJsonNull()) {
+                docArray = doccuments.getAsJsonArray();
             }
-        };
-        */
+        }
+        for (int i = 0; i < docArray.size(); i++) {
+            JsonObject jsonObject = docArray.get(i).getAsJsonObject();
+            
+        }
 
+    }
 
+    private void moderateText() {
         reachURL(myContext, myOriginalText);
     }
 
