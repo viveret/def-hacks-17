@@ -103,4 +103,9 @@ public class Profile implements IProfile {
         } else
             return false;
     }
+
+    @Override
+    public String toString() {
+        return "[name=\"" + myName + "\", number=" + myNumber + "]";
+    }
 }

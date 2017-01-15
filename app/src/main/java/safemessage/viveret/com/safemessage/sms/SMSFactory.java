@@ -9,13 +9,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.telephony.SmsMessage;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import safemessage.viveret.com.safemessage.Config;
 import safemessage.viveret.com.safemessage.fb.TextModerate;
 
 /**
@@ -40,11 +38,9 @@ public class SMSFactory extends BroadcastReceiver {
         Cursor cursor = c.getContentResolver().query(uri, null, null, null, null);
 
         String[] projection = new String[]{"_id", "thread_id", "address", "person", "body", "date", "type"};
-        Log.v(Config.LOGTAG, "LoadFinished");
         List<String> phoneNumbers = new ArrayList<String>();
         while (cursor.moveToNext()) {
             String phoneNumber = cursor.getString(cursor.getColumnIndexOrThrow("address"));
-            Log.v(Config.LOGTAG, phoneNumber);
             int type = cursor.getInt(cursor.getColumnIndexOrThrow("type"));
             if ((!phoneNumbers.contains(phoneNumber)) && (type != 3) && (phoneNumber.length() >= 1)) {
                 String name = null;
@@ -61,7 +57,6 @@ public class SMSFactory extends BroadcastReceiver {
                     localCursor.moveToFirst();
                     name = localCursor.getString(localCursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
                 }
-                Log.v(Config.LOGTAG, "person:" + person + "  name:" + name + "  phoneNumber:" + phoneNumber);
                 localCursor.close();
                 phoneNumbers.add(phoneNumber);
 
