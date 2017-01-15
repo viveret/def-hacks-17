@@ -1,9 +1,11 @@
 package safemessage.viveret.com.safemessage.model;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import safemessage.viveret.com.safemessage.fb.IProfile;
+import safemessage.viveret.com.safemessage.Config;
 import safemessage.viveret.com.safemessage.fb.ProfileFactory;
 import safemessage.viveret.com.safemessage.sms.SMSData;
 import safemessage.viveret.com.safemessage.sms.SMSFactory;
@@ -43,31 +45,33 @@ public class AllMessageThreads implements SMSFactory.SmsFactoryUpdatesListener {
     }
 
     private void recalculateConversations() {
-        List<String> distinctNumbers = new ArrayList<String>();
+        List<Integer> difThreads = new ArrayList<Integer>();
         for (SMSData msg : myCache.getData()) {
-            if (msg.getNumber() != null && !distinctNumbers.contains(msg.getNumber())) {
-                distinctNumbers.add(msg.getNumber());
+            if (!difThreads.contains(new Integer(msg.getThreadId()))) {
+                difThreads.add(new Integer(msg.getThreadId()));
             }
         }
 
-        for (String number : distinctNumbers) {
-            IProfile tmpProfile = profileCache.getProfile(null, number);
-            MessageThread tmp = getThread(tmpProfile);
+        for (Integer id : difThreads) {
+            // IProfile tmpProfile = profileCache.getProfile(null, number);
+            MessageThread tmp = getThread(id.intValue());
             if (tmp == null) {
-                tmp = new MessageThread(myCache, tmpProfile);
+                tmp = new MessageThread(myCache, profileCache, id.intValue());
                 tmp.onSmsUpdated(myCache);
                 myThreads.add(tmp);
+                Log.v(Config.LOGTAG, "Adding thread " + id);
             }
 
             if (tmp.getMessages().size() == 0) {
+                Log.v(Config.LOGTAG, "Removing thread " + id);
                 myThreads.remove(tmp);
             }
         }
     }
 
-    public MessageThread getThread(IProfile other) {
+    public MessageThread getThread(int id) {
         for (MessageThread mt : myThreads) {
-            if (mt.getOthers().size() > 0 && mt.getOthers().get(0).equals(other))
+            if (mt.getThreadId() == id)
                 return mt;
         }
 

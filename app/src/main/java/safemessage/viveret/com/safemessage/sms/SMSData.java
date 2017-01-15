@@ -13,11 +13,11 @@ import safemessage.viveret.com.safemessage.fb.ProfileFactory;
  */
 
 public class SMSData {
-    private String myName, myNumber, myMessage, myThreadId;
+    private String myName, myNumber, myMessage;
     private Date myDate;
-    private int myType;
+    private int myType, myThreadId;
 
-    public SMSData(String theName, String theNumber, String theMessage, int theType, Date theDate, String theThreadId) {
+    public SMSData(String theName, String theNumber, String theMessage, int theType, Date theDate, int theThreadId) {
         myName = theName;
 
         myNumber = theNumber.replaceAll("[^\\d.]", "");
@@ -48,6 +48,10 @@ public class SMSData {
 
     public String getBody() {
         return myMessage;
+    }
+
+    public int getThreadId() {
+        return myThreadId;
     }
 
     public IProfile getProfile(ProfileFactory profiles) {
