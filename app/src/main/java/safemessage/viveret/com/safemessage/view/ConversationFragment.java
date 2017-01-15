@@ -1,13 +1,27 @@
 package safemessage.viveret.com.safemessage.view;
 
+import android.app.Activity;
 import android.app.Fragment;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.telephony.SmsManager;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import safemessage.viveret.com.safemessage.Config;
 import safemessage.viveret.com.safemessage.R;
 import safemessage.viveret.com.safemessage.model.MessageThread;
 
@@ -20,19 +34,13 @@ import safemessage.viveret.com.safemessage.model.MessageThread;
  * create an instance of this fragment.
  */
 public class ConversationFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     private OnFragmentInteractionListener mListener;
 
     private MessageThread myMT;
     private ConversationAdapter myAdapter;
+
+    private EditText msgForm;
+    private ImageButton sendMsgBtn;
 
     public ConversationFragment() {
         super();
@@ -62,8 +70,6 @@ public class ConversationFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -71,7 +77,7 @@ public class ConversationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_home, container, false);
+        View v = inflater.inflate(R.layout.fragment_conversation, container, false);
 
         ListView lv = (ListView) v.findViewById(R.id.mainList);
         myAdapter = new ConversationAdapter(getActivity(), myMT);
@@ -83,6 +89,26 @@ public class ConversationFragment extends Fragment {
 //                mListener.onSelectMessageThread(tmp);
 //            }
 //        });
+
+        msgForm = (EditText) v.findViewById(R.id.msgForm);
+        sendMsgBtn = (ImageButton) v.findViewById(R.id.sendMsgBtn);
+        sendMsgBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendMessage(msgForm.getText().toString());
+            }
+        });
+
+        msgForm.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    sendMsgBtn.performClick();
+                    return true;
+                }
+                return false;
+            }
+        });
 
         return v;
     }
@@ -104,6 +130,70 @@ public class ConversationFragment extends Fragment {
         mListener = null;
         // myMsgs.removeListener(myAdapter);
     }
+
+    private void sendMessage(String msg) {
+        Log.i(Config.LOGTAG, "Sending message \"" + msg + "\"");
+
+        String SENT = "SMS_SENT";
+        String DELIVERED = "SMS_DELIVERED";
+
+        PendingIntent sentPI = PendingIntent.getBroadcast(getActivity(), 0,
+                new Intent(SENT), 0);
+
+        PendingIntent deliveredPI = PendingIntent.getBroadcast(getActivity(), 0,
+                new Intent(DELIVERED), 0);
+
+        //---when the SMS has been sent---
+        getActivity().registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context arg0, Intent arg1) {
+                switch (getResultCode()) {
+                    case Activity.RESULT_OK:
+                        Toast.makeText(getActivity(), "SMS sent",
+                                Toast.LENGTH_SHORT).show();
+                        break;
+                    case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
+                        Toast.makeText(getActivity(), "Generic failure",
+                                Toast.LENGTH_SHORT).show();
+                        break;
+                    case SmsManager.RESULT_ERROR_NO_SERVICE:
+                        Toast.makeText(getActivity(), "No service",
+                                Toast.LENGTH_SHORT).show();
+                        break;
+                    case SmsManager.RESULT_ERROR_NULL_PDU:
+                        Toast.makeText(getActivity(), "Null PDU",
+                                Toast.LENGTH_SHORT).show();
+                        break;
+                    case SmsManager.RESULT_ERROR_RADIO_OFF:
+                        Toast.makeText(getActivity(), "Radio off",
+                                Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+        }, new IntentFilter(SENT));
+
+        //---when the SMS has been delivered---
+        getActivity().registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context arg0, Intent arg1) {
+                switch (getResultCode()) {
+                    case Activity.RESULT_OK:
+                        Toast.makeText(getActivity(), "SMS delivered",
+                                Toast.LENGTH_SHORT).show();
+                        msgForm.setText("");
+                        break;
+                    case Activity.RESULT_CANCELED:
+                        Toast.makeText(getActivity(), "SMS not delivered",
+                                Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+        }, new IntentFilter(DELIVERED));
+
+        SmsManager mgr = SmsManager.getDefault();
+        mgr.sendTextMessage(myMT.getOthers().get(0).getNumber(), null, msg, sentPI, deliveredPI);
+    }
+
 
     /**
      * This interface must be implemented by activities that contain this
