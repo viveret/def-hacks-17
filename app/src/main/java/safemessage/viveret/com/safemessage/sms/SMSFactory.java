@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 import safemessage.viveret.com.safemessage.Config;
+import safemessage.viveret.com.safemessage.fb.TextModerate;
 
 /**
  * Created by viveret on 1/14/17.
@@ -65,7 +66,7 @@ public class SMSFactory extends BroadcastReceiver {
                 phoneNumbers.add(phoneNumber);
 
                 //Justin's code censors the message
-                    // Test instance TextModerate censoredText = new TextModerate("shit bad word",c);
+                 TextModerate censoredText = new TextModerate("shit wwww.reddit.com www.pornhub.com bad word",c);
                 //TextModerate censoredText = new TextModerate(smsContent,c);
                 //smsContent = censoredText.getCensoredText();
 

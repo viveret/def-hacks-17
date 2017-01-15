@@ -18,7 +18,9 @@ import safemessage.viveret.com.safemessage.Config;
 public class TextModerate implements ITextModerate {
 
 
-
+    private double adultProbability = .5;
+    private double malwareProbability = .5;
+    private double phishingProbability = .5;
     private String myOriginalText;
     private String myCensoredText;
     private int myInstancesOfProfanity;
@@ -33,19 +35,14 @@ public class TextModerate implements ITextModerate {
     }
 
     public void reachURL(Context theContext, String theText, FutureCallback<JsonObject> call ) {
-        final JsonObject json = new JsonObject();
-
         Ion.with(theContext)
                 .load(cmEndPoint)
-                //.setJsonObjectBody(json)
+
                 .addHeader("Content-Type", "text/plain")
                 .addHeader("Ocp-Apim-Subscription-Key", SUBSCRIPTION_KEY)
-                .setBodyParameter("urls", "true")
-                //.setBodyParameter("urls","true")
 
 
-
-                //.setJsonObjectBody(json)
+                .setStringBody(theText)
                 .asJsonObject()
                 .setCallback(call);
 
@@ -59,38 +56,76 @@ public class TextModerate implements ITextModerate {
 
                Log.v(Config.LOGTAG, "Microsoft Cognitive Services contacted");
                 Log.v(Config.LOGTAG, result.toString());
-                JsonElement terms;
-                JsonArray termArray = new JsonArray();
-                if (result.get("Terms")!= null){
-                    terms = result.get("Terms");
-                    if (!terms.isJsonNull()) {
-                        termArray = terms.getAsJsonArray();
-                    }
-                }
-                 myInstancesOfProfanity = termArray.size() / 2; //Gives the actual number of profane words
-                Log.v(Config.LOGTAG, String.valueOf(myInstancesOfProfanity));
-                StringBuilder sb = new StringBuilder();
-                int currentIndex = 0;
-                for (int i = 0; i < termArray.size(); i = i + 2) {
-                    //May be a source of errors
-                    JsonObject jsonObject = termArray.get(i).getAsJsonObject();
-                    int endIndex = jsonObject.get("Index").getAsInt();
-                    String profanity = jsonObject.get("Term").toString();
-                    String newSection = myOriginalText.substring(currentIndex, endIndex);
-                    sb.append(newSection);
-                    currentIndex = currentIndex + profanity.length() - 1;
-                }
-                String newSection = myOriginalText.substring(currentIndex);
-                sb.append(newSection);
-                myCensoredText = sb.toString();
-                if (myInstancesOfProfanity > 0) {
-
-                    Log.v(Config.LOGTAG, myCensoredText);
-                }
+                moderateProfanity(result);
+                moderateURL(result);
             }
         };
 
         reachURL(myContext, myOriginalText, callback);
+    }
+
+    private void moderateURL(JsonObject result) {
+        JsonElement urls;
+        JsonArray urlArray = new JsonArray();
+        if (result.get("Urls")!= null){
+            urls = result.get("Terms");
+            if (!urls.isJsonNull()) {
+                urlArray = urls.getAsJsonArray();
+            }
+        }
+
+        for (int i = 0; i < urlArray.size(); i++) {
+            JsonObject jsonObject = urlArray.get(i).getAsJsonObject();
+            jsonObject = jsonObject.getAsJsonObject("Categories");
+           // urlArray = jsonObject.getAsJsonArray();//being used for categories
+           // jsonObject = urlArray.
+            if (adultProbability < jsonObject.get("Adult").getAsDouble() ||
+                    malwareProbability <  jsonObject.get("Malware").getAsDouble() ||
+                    phishingProbability < jsonObject.get("Phishing").getAsDouble()) {
+                Log.v(Config.LOGTAG, jsonObject.get("URL").getAsString());
+                myCensoredText.replaceFirst(jsonObject.get("URL").getAsString(), "LINK REMOVED");
+            }
+        }
+
+
+    }
+
+
+    private void moderateProfanity(JsonObject result) {
+        JsonElement terms;
+        JsonArray termArray = new JsonArray();
+        if (result.get("Terms")!= null){
+            terms = result.get("Terms");
+            if (!terms.isJsonNull()) {
+                termArray = terms.getAsJsonArray();
+            }
+        }
+        myInstancesOfProfanity = termArray.size() / 2; //Gives the actual number of profane words
+        Log.v(Config.LOGTAG, String.valueOf(myInstancesOfProfanity));
+        StringBuilder sb = new StringBuilder();
+        int currentIndex = 0;
+        int endIndex = 0;
+
+        for (int i = 0; i < termArray.size(); i = i + 2) {
+            //May be a source of errors
+
+            JsonObject jsonObject = termArray.get(i).getAsJsonObject();
+            endIndex = jsonObject.get("Index").getAsInt();
+            String profanity = jsonObject.get("Term").toString();
+            String newSection = myOriginalText.substring(currentIndex, endIndex );
+            sb.append(newSection);
+            for (int j = 0; j <  profanity.length() - 2; j++) {
+                sb.append("*");
+            }
+
+            currentIndex = endIndex + profanity.length() -2;
+        }
+        String newSection = myOriginalText.substring(currentIndex);
+        sb.append(newSection);
+        if (myInstancesOfProfanity > 0) {
+            myCensoredText = sb.toString();
+            Log.v(Config.LOGTAG, myCensoredText);
+        }
     }
 
     public String getCensoredText() { return myCensoredText;}
