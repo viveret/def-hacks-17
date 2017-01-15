@@ -107,6 +107,10 @@ public class SMSFactory extends BroadcastReceiver {
         return myData;
     }
 
+    public List<SMSData> getDataByThreadId(int threadId) {
+        return null;
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals(SMS_RECEIVED)) {
