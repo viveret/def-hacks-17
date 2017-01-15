@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.widget.Button;
 
 import safemessage.viveret.com.safemessage.view.HomeFragment;
 
@@ -28,14 +27,6 @@ public class HomeActivity extends FragmentActivity
         FragmentTransaction trans = fm.beginTransaction();
         trans.replace(R.id.content_frame, f);
         trans.commit();
-    }
-
-    /*
-    Moves user to the number fragment.
-     */
-    public void newMessage() {
-        Button myButton = (Button) findViewById(R.id.button2);
-        myButton.setText("CLICKED");
     }
 
     @Override

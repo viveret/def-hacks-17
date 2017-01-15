@@ -53,7 +53,6 @@
             android:text="New Message"
             android:layout_width="match_parent"
             android:layout_height="65dp"
-            android:onClick="newMessage"
             android:layout_below="@+id/scroll_view1"
             android:layout_alignParentRight="true" />
 
