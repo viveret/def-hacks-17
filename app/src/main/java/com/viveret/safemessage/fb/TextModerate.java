@@ -8,6 +8,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.koushikdutta.ion.Ion;
 import com.viveret.safemessage.Config;
+import com.viveret.safemessage.R;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
@@ -44,7 +45,7 @@ public class TextModerate implements ITextModerate {
                     .load(cmEndPoint)
 
                     .addHeader("Content-Type", "text/plain")
-                    .addHeader("Ocp-Apim-Subscription-Key", SUBSCRIPTION_KEY)
+                    .addHeader("Ocp-Apim-Subscription-Key", theContext.getString(R.string.key_ms_text_mod))
 
 
                     .setStringBody(theText)
@@ -66,7 +67,7 @@ public class TextModerate implements ITextModerate {
                     .load(cmtxtanalyticsEndPoint)
 
                     .addHeader("Content-Type", "text/json")
-                    .addHeader("Ocp-Apim-Subscription-Key", SUBSCRIPTION_KEY_TEXT_ANALYTICS)
+                    .addHeader("Ocp-Apim-Subscription-Key", theContext.getString(R.string.key_ms_text_analytics))
 
 
                     .setStringBody("{\"documents\": [ {\"language\": \"en\",\"id\": \"string\", \"text\": \"" + theText + "\"}]}")

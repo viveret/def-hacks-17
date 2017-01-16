@@ -42,3 +42,9 @@ captures/
 
 # Keystore files
 *.jks
+
+# API Keys or other sensitive data
+gitignore-*
+
+app/src/androidTest/
+app/src/test/
