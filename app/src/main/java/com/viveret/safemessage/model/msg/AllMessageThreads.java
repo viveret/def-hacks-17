@@ -1,11 +1,11 @@
-package com.viveret.safemessage.model;
+package com.viveret.safemessage.model.msg;
 
 import android.util.Log;
 
 import com.viveret.safemessage.Config;
 import com.viveret.safemessage.fb.ProfileFactory;
-import com.viveret.safemessage.sms.SMSData;
-import com.viveret.safemessage.sms.SMSFactory;
+import com.viveret.safemessage.model.msg.sms.SMSData;
+import com.viveret.safemessage.model.msg.sms.SMSFactory;
 
 import java.util.ArrayList;
 import java.util.List;

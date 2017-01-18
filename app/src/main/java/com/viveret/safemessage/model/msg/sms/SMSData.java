@@ -1,10 +1,11 @@
-package com.viveret.safemessage.sms;
+package com.viveret.safemessage.model.msg.sms;
 
 import android.util.Log;
 
 import com.viveret.safemessage.Config;
 import com.viveret.safemessage.fb.IProfile;
 import com.viveret.safemessage.fb.ProfileFactory;
+import com.viveret.safemessage.model.msg.IMessage;
 
 import java.util.Comparator;
 import java.util.Date;
@@ -13,7 +14,7 @@ import java.util.Date;
  * Created by viveret on 1/14/17.
  */
 
-public class SMSData implements Comparable<SMSData> {
+public class SMSData implements IMessage {
     private String myName, myNumber, myMessage;
     private Date myDate;
     private int myType, myThreadId;
@@ -35,7 +36,7 @@ public class SMSData implements Comparable<SMSData> {
     }
 
     @Override
-    public int compareTo(SMSData o) {
+    public int compareTo(IMessage o) {
         return myDate.compareTo(o.getDate());
     }
 
@@ -59,6 +60,16 @@ public class SMSData implements Comparable<SMSData> {
         return myDate;
     }
 
+    @Override
+    public String getTextContent() {
+        return getBody();
+    }
+
+    @Override
+    public String getTextTitle() {
+        return null;
+    }
+
     public int getThreadId() {
         return myThreadId;
     }
@@ -75,16 +86,16 @@ public class SMSData implements Comparable<SMSData> {
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof SMSData) {
-            return myDate.equals(((SMSData) o).getDate());
+        if (o instanceof IMessage) {
+            return myDate.equals(((IMessage) o).getDate());
         } else {
             return false;
         }
     }
 
-    public static class DateComparator implements Comparator<SMSData> {
+    public static class DateComparator implements Comparator<IMessage> {
         @Override
-        public int compare(SMSData o1, SMSData o2) {
+        public int compare(IMessage o1, IMessage o2) {
             return o1.getDate().compareTo(o2.getDate());
         }
     }

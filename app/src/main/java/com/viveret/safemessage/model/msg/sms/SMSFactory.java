@@ -1,4 +1,4 @@
-package com.viveret.safemessage.sms;
+package com.viveret.safemessage.model.msg.sms;
 
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
@@ -11,7 +11,7 @@ import android.provider.ContactsContract;
 import android.util.Log;
 
 import com.viveret.safemessage.Config;
-import com.viveret.safemessage.fb.TextModerate;
+import com.viveret.safemessage.model.TextModerate;
 
 import java.util.ArrayList;
 import java.util.Date;

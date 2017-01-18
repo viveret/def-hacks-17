@@ -1,4 +1,4 @@
-package com.viveret.safemessage.fb;
+package com.viveret.safemessage.model;
 
 import android.content.Context;
 import android.util.Log;

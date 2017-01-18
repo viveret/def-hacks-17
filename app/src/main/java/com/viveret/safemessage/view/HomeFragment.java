@@ -12,8 +12,8 @@ import android.widget.ListView;
 
 import com.viveret.safemessage.R;
 import com.viveret.safemessage.fb.ProfileFactory;
-import com.viveret.safemessage.model.AllMessageThreads;
-import com.viveret.safemessage.model.MessageThread;
+import com.viveret.safemessage.model.msg.AllMessageThreads;
+import com.viveret.safemessage.model.msg.MessageThread;
 
 /**
  * A simple {@link Fragment} subclass.

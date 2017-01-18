@@ -15,9 +15,9 @@ import android.view.View;
 import android.widget.ExpandableListView;
 
 import com.viveret.safemessage.fb.ProfileFactory;
-import com.viveret.safemessage.model.AllMessageThreads;
-import com.viveret.safemessage.model.MessageThread;
-import com.viveret.safemessage.sms.SMSFactory;
+import com.viveret.safemessage.model.msg.AllMessageThreads;
+import com.viveret.safemessage.model.msg.MessageThread;
+import com.viveret.safemessage.model.msg.sms.SMSFactory;
 import com.viveret.safemessage.view.ConversationFragment;
 import com.viveret.safemessage.view.HomeFragment;
 

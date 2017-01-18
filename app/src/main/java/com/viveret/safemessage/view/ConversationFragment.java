@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.viveret.safemessage.Config;
 import com.viveret.safemessage.R;
-import com.viveret.safemessage.model.MessageThread;
+import com.viveret.safemessage.model.msg.MessageThread;
 
 /**
  * A simple {@link Fragment} subclass.

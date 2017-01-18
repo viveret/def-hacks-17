@@ -1,6 +1,6 @@
 package com.viveret.safemessage.fb;
 
-import com.viveret.safemessage.sms.SMSData;
+import com.viveret.safemessage.model.msg.sms.SMSData;
 
 /**
  * Created by viveret on 1/14/17.

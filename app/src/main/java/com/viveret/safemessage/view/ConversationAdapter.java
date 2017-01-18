@@ -10,8 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.viveret.safemessage.R;
-import com.viveret.safemessage.model.MessageThread;
-import com.viveret.safemessage.sms.SMSData;
+import com.viveret.safemessage.model.msg.MessageThread;
+import com.viveret.safemessage.model.msg.sms.SMSData;
 
 /**
  * Created by viveret on 1/14/17.

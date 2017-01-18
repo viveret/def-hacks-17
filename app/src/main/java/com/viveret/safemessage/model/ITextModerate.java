@@ -1,4 +1,4 @@
-package com.viveret.safemessage.fb;
+package com.viveret.safemessage.model;
 
 /**
  * Created by Justin of America on 1/14/2017.
